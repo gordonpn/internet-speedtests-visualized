@@ -55,10 +55,9 @@ def update_data():
 def get_random_times():
     random_wait_times = []
     while len(random_wait_times) < 5:
-        random_wait_times.append(random.randint(0, 60))
+        random_wait_times.append(random.randint(0, 30))
         random_wait_times = list(dict.fromkeys(random_wait_times))
 
-    random_wait_times.sort()
     logger.info("Random wait times: ")
     logger.info(random_wait_times)
     return random_wait_times
