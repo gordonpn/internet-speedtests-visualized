@@ -10,16 +10,19 @@ import speedtest
 
 def get_speed():
     logger.debug("Starting speed test")
-    current_test = speedtest.Speedtest()
-    current_test.get_servers()
-    current_test.get_best_server()
-    logger.info("Speed test in progress...")
-    current_test.download()
-    results_dict = current_test.results.dict()
-    # return the download speed in terms of MB/s
-    raw_speed = results_dict['download']
-    instant_speed = round((raw_speed / 8000000), 2)
-    logger.debug("Download speed test result is {} MB/s".format(instant_speed))
+    instant_speed = 0
+    try:
+        current_test = speedtest.Speedtest()
+        current_test.get_servers()
+        current_test.get_best_server()
+        logger.info("Speed test in progress...")
+        current_test.download()
+        results_dict = current_test.results.dict()
+        raw_speed = results_dict['download']
+        instant_speed = round((raw_speed / 8000000), 2)
+        logger.debug("Download speed test result is {} MB/s".format(instant_speed))
+    except speedtest.ConfigRetrievalError as e:
+        logger.error(str(e))
     return instant_speed
 
 
@@ -75,4 +78,7 @@ if __name__ == '__main__':
         logger.info("Waiting {} minutes until next test".format(time_to_wait))
         time.sleep(int(time_to_wait) * int(60))
         date_time, speed = get_dict()
-        update_data()
+        if speed != 0:
+            update_data()
+        else:
+            logger.info("Could not connect to internet, skipping this test")
