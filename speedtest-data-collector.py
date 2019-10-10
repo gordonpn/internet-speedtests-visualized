@@ -37,10 +37,11 @@ def get_dict():
 
 
 def update_data():
-    if os.path.exists("speedtest_data.json"):
+    data_json = "speedtest_data.json"
+    if os.path.exists(data_json):
         try:
             logger.info("Opening existing json")
-            with open("speedtest_data.json", "r") as read_file:
+            with open(data_json, "r") as read_file:
                 data = json.load(read_file)
         except ValueError:
             logger.error("File was empty, creating new data")
@@ -51,7 +52,7 @@ def update_data():
         data = {date_time: speed}
 
     logger.info("Writing new data into the json")
-    with open("speedtest_data.json", "w+") as write_file:
+    with open(data_json, "w+") as write_file:
         json.dump(data, write_file, indent=4)
 
 
