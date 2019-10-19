@@ -4,13 +4,14 @@ import logging
 import os
 import random
 import time
+from typing import List, Dict, Tuple
 
 import speedtest
 
 
-def get_speed():
+def get_speed() -> float:
     logger.debug("Starting speed test")
-    instant_speed = 0
+    instant_speed: float = 0.0
     try:
         current_test = speedtest.Speedtest()
         current_test.get_servers()
@@ -26,13 +27,13 @@ def get_speed():
     return instant_speed
 
 
-def get_datetime():
-    test_date_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
+def get_datetime() -> str:
+    test_date_time: str = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
     logger.debug("Current test time is {}".format(test_date_time))
     return test_date_time
 
 
-def get_dict():
+def get_dict() -> Tuple[str, float]:
     return get_datetime(), get_speed()
 
 
@@ -45,7 +46,7 @@ def update_data():
                 data = json.load(read_file)
         except ValueError:
             logger.error("File was empty, creating new data")
-            data = {}
+            data: Dict[str, float] = {}
 
         data[date_time] = speed
     else:
@@ -56,8 +57,8 @@ def update_data():
         json.dump(data, write_file, indent=4)
 
 
-def get_random_times():
-    random_wait_times = []
+def get_random_times() -> List[int]:
+    random_wait_times: List[int] = []
     while len(random_wait_times) < 5:
         random_wait_times.append(random.randint(0, 30))
         random_wait_times = list(dict.fromkeys(random_wait_times))
@@ -73,7 +74,7 @@ if __name__ == '__main__':
     logger.addHandler(logging.StreamHandler())
     logger.debug("Starting up Python script")
 
-    wait_time = get_random_times()
+    wait_time: List[int] = get_random_times()
 
     for time_to_wait in wait_time:
         logger.info("Waiting {} minutes until next test".format(time_to_wait))
