@@ -4,26 +4,24 @@ import logging
 import os
 import random
 import time
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
 
 import speedtest
 
 
 def get_speed() -> float:
     logger.debug("Starting speed test")
-    instant_speed: float = 0.0
-    try:
-        current_test = speedtest.Speedtest()
-        current_test.get_servers()
-        current_test.get_best_server()
-        logger.info("Speed test in progress...")
-        current_test.download()
-        results_dict = current_test.results.dict()
-        raw_speed = results_dict['download']
-        instant_speed = round((raw_speed / 8000000), 2)
-        logger.debug("Download speed test result is {} MB/s".format(instant_speed))
-    except speedtest.ConfigRetrievalError as e:
-        logger.error(str(e))
+    current_test = speedtest.Speedtest()
+    current_test.get_servers()
+    current_test.get_best_server()
+    logger.info("Speed test in progress...")
+    current_test.download()
+    results_dict = current_test.results.dict()
+    raw_speed = results_dict['download']
+    instant_speed: float = round((raw_speed / 8000000), 2)
+    logger.debug("Download speed test result is {} MB/s".format(instant_speed))
+    if instant_speed is None:
+        raise Exception("Recorded speed is 0")
     return instant_speed
 
 
