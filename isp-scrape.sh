@@ -1,4 +1,4 @@
 #!/bin/zsh
 
 pip3 install -r requirements.txt
-python3 ./SpeedtestCollector/speedtest_collector.py
+python3 ./DataCollector/speedtest_collector.py
