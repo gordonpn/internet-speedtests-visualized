@@ -1,0 +1,28 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "main": "app.js",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/gpnn/isp-speed-expectation-vs-reality.git"
+  },
+  "author": "Gordon Pham-Nguyen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gpnn/isp-speed-expectation-vs-reality/issues"
+  },
+  "homepage": "https://github.com/gpnn/isp-speed-expectation-vs-reality#readme",
+  "description": ""
+}
