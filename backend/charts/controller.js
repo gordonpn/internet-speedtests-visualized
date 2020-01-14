@@ -22,6 +22,33 @@ exports.dailyAverage = (req, res) => {
     console.log(`Daily date requested at ${currentTime}`);
     getNewData();
 
+    let modifiedData = new Map();
+    const entries = Object.entries(data);
+    let index = 0;
+    let currentSum = 0;
+    let count = 0;
+
+    for (const [key, value] of entries) {
+        let currentItem = key.substring(0, key.indexOf('_'));
+        let nextItem = "";
+
+        if (index < entries.length - 1) {
+            nextItem = entries[index + 1][0].substring(0, key.indexOf('_'));
+        }
+
+        currentSum += value;
+        count++;
+
+        if (currentItem !== nextItem) {
+            let average = currentSum / count;
+            modifiedData.set(currentItem, average);
+            currentSum = 0;
+            count = 0;
+        }
+        index++;
+    }
+    lastFetched = Date.now();
+    res.send(JSON.stringify([...new Map([...modifiedData.entries()].sort())]));
 };
 
 exports.weeklyAverage = (req, res) => {
@@ -29,12 +56,17 @@ exports.weeklyAverage = (req, res) => {
     console.log(`Weekly date requested at ${currentTime}`);
     getNewData();
 
+    let modifiedData = new Map();
+    const entries = Object.entries(data);
+
+    lastFetched = Date.now();
+    res.send(JSON.stringify([...new Map([...modifiedData.entries()].sort())]));
 };
 
 function getNewData() {
     let currentTime = Date.now();
 
-    if ((currentTime - lastFetched) > (20 * 60000)) {
+    if ((currentTime - lastFetched) > (60 * 60000)) {
         console.log("Fetching new data");
         data = require('./reader');
     } else {
