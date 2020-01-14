@@ -56,11 +56,28 @@ exports.weeklyAverage = (req, res) => {
     console.log(`Weekly date requested at ${currentTime}`);
     getNewData();
 
+    let map = new Map();
     let modifiedData = new Map();
     const entries = Object.entries(data);
 
+    for (const [key, value] of entries) {
+        let currentDate = key.substring(0, key.indexOf('_'));
+        let currentDay = getWeekDay(currentDate);
+
+        if (!map.has(currentDay)) {
+            map.set(currentDay, [value]);
+        }
+        map.get(currentDay).push(value);
+    }
+
+    for (const [key, value] of map.entries()) {
+        let sum = value.reduce((previous, current) => current += previous);
+        let average = sum / value.length;
+        modifiedData.set(key, average);
+    }
+
     lastFetched = Date.now();
-    res.send(JSON.stringify([...new Map([...modifiedData.entries()].sort())]));
+    res.send(JSON.stringify([...new Map([...modifiedData.entries()])]));
 };
 
 function getNewData() {
@@ -69,7 +86,11 @@ function getNewData() {
     if ((currentTime - lastFetched) > (60 * 60000)) {
         console.log("Fetching new data");
         data = require('./reader');
-    } else {
-        console.log("Returning cached data");
     }
+    console.log("Returning cached data");
+}
+
+function getWeekDay(date) {
+    let weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return weekdays[new Date(date).getUTCDay()];
 }
