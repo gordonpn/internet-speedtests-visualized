@@ -1,0 +1,24 @@
+{
+  "name": "isp-speed-expectation-vs-reality",
+  "version": "1.0.0",
+  "description": "## Description",
+  "main": "index.js",
+  "scripts": {
+    "installall": "concurrently \"npm i\" \"cd backend && npm i\" \"cd frontend && npm i\" ",
+    "start": "concurrently \"cd backend && nodemon server\" \"cd frontend && npm start\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gpnn/isp-speed-expectation-vs-reality.git"
+  },
+  "author": "Gordon Pham-Nguyen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gpnn/isp-speed-expectation-vs-reality/issues"
+  },
+  "homepage": "https://github.com/gpnn/isp-speed-expectation-vs-reality#readme",
+  "devDependencies": {
+    "concurrently": "^5.0.2",
+    "nodemon": "^2.0.2"
+  }
+}
