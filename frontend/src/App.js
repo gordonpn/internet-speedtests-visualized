@@ -1,26 +1,45 @@
 import React from 'react';
 import './App.css';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import HourlyChart from "./components/HourlyChart";
+import WeeklyChart from "./components/WeeklyChart";
+import DailyChart from "./components/DailyChart";
 
 function App() {
     return (
         <div className="App">
-            <div className="container">
-                <div className="card border-0 shadow my-5">
-                    <div className="card-body p-5">
+            <Container>
+                <Card className="border-0 shadow my-5">
+                    <Card.Body className="p-5">
                         <h1 className="font-weight-light">ISP Speed Expectations vs Reality</h1>
                         <p className="lead">Over several months, I collected speedtest data to compare with what the
-                            Internet Service Provider advertises and the reality of it<br/>This page shows the results
-                            using graphs</p>
-                        <div className="container">
-                            <div className="row">
-                                <div className="col">
-                                    <img className="img-fluid" src="http://placehold.it/750x500" alt=""/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            Internet Service Provider advertises and the reality of it.</p>
+                        <hr/>
+                        <Container>
+                            <Row>
+                                <Col>
+                                    <HourlyChart/>
+                                </Col>
+                            </Row>
+                            <br/>
+                            <Row>
+                                <Col>
+                                    <DailyChart/>
+                                </Col>
+                            </Row>
+                            <br/>
+                            <Row>
+                                <Col>
+                                    <WeeklyChart/>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Card.Body>
+                </Card>
+            </Container>
         </div>
     );
 }

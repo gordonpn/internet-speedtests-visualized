@@ -1,4 +1,5 @@
-let data = require('./reader');
+let dataSource = './reader';
+let data = require(dataSource);
 let lastFetched = Date.now();
 
 exports.hourlyAverage = (req, res) => {
@@ -84,8 +85,9 @@ function getNewData() {
     let currentTime = Date.now();
 
     if ((currentTime - lastFetched) > (60 * 60000)) {
+        delete require.cache[require.resolve(dataSource)];
         console.log("Fetching new data");
-        data = require('./reader');
+        data = require(dataSource);
     }
     console.log("Returning cached data");
 }
