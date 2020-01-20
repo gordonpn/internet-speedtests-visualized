@@ -9,6 +9,9 @@ Over months, I collected data from speed tests and saved into a json file.
 A front-end is in development to visualize all the data collected.
 
 ---
+http://speed.gordon-pn.com
+
+![Website](https://img.shields.io/website?style=flat-square&url=http%3A%2F%2Fspeed.gordon-pn.com)
 ![GitHub](https://img.shields.io/github/license/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
 
 ![GitHub top language](https://img.shields.io/github/languages/top/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
@@ -78,8 +81,9 @@ npm run start
 Data collection can be automated through Jenkins on a server of some sort. 
 
 ## Roadmap / Todo
-- [ ] Finish frontend
-    - [ ] Generate charts
+- [x] Finish frontend
+    - [x] Generate charts
+- [ ] Max and min lines for weekly and daily charts
 
 ## License
 
