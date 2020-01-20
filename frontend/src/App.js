@@ -19,7 +19,7 @@ function App() {
                             Internet Service Provider advertises and the reality of it. While taking into factors such as how many devices are using the bandwidth and external factors.</p>
                         <br/>
                         <hr/>
-                        <Container>
+                        <Container id="content-desktop">
                             <Row>
                                 <Col>
                                     <HourlyChart/>
@@ -37,6 +37,10 @@ function App() {
                                     <DailyChart/>
                                 </Col>
                             </Row>
+                        </Container>
+                        <Container id="content-mobile">
+                            <h4>Please revisit this site on a desktop or laptop, mobile is too small to display the charts correctly.</h4>
+                            <p>If you are using a computer, try making it full width.</p>
                         </Container>
                     </Card.Body>
                 </Card>

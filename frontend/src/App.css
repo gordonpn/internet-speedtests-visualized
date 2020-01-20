@@ -13,3 +13,23 @@ body {
     margin: 0;
     width: 100%;
 }
+
+#content-desktop {
+    display: block;
+}
+
+#content-mobile {
+    display: none;
+}
+
+@media (orientation: portrait) {
+
+    #content-desktop {
+        display: none;
+    }
+
+    #content-mobile {
+        display: block;
+    }
+
+}
