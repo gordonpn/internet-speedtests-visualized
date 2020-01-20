@@ -7,11 +7,33 @@ exports.hourlyAverage = (req, res) => {
     console.log(`Hourly data requested at ${currentTime}`);
     getNewData();
 
+    let map = new Map();
     let modifiedData = new Map();
     const entries = Object.entries(data);
 
     for (const [key, value] of entries) {
-        modifiedData.set(key.substring(key.indexOf('_') + 1, key.length), value);
+        let hour = key.substring(key.indexOf('_') + 1, key.indexOf(':'));
+        let minutes = parseInt(key.substring(key.indexOf(':') + 1, key.length));
+
+        if (minutes >= 15 && minutes < 45) {
+            let secondHalf = hour + ":30";
+            if (!map.has(secondHalf)) {
+                map.set(secondHalf, [value]);
+            }
+            map.get(secondHalf).push(value);
+        } else {
+            let firstHalf = hour + ":00";
+            if (!map.has(firstHalf)) {
+                map.set(firstHalf, [value]);
+            }
+            map.get(firstHalf).push(value);
+        }
+    }
+
+    for (const [key, value] of map.entries()) {
+        let sum = value.reduce((previous, current) => current += previous);
+        let average = sum / value.length;
+        modifiedData.set(key, average);
     }
 
     lastFetched = Date.now();

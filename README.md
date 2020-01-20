@@ -23,7 +23,7 @@ A front-end is in development to visualize all the data collected.
     - speedtest library
 - Node.js and Express.js for the API endpoints
 - React.js and Bootstrap CSS framework to build the front-end
-    - ApexChart.js for charts
+    - ApexChart.js: charts library
 
 ## Features
 

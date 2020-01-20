@@ -9,7 +9,10 @@ class DailyChart extends React.Component {
         this.state = {
             options: {
                 xaxis: {
-                    categories: []
+                    categories: [],
+                    labels: {
+                        show: false
+                    }
                 },
                 yaxis: {
                     decimalsInFloat: 0
