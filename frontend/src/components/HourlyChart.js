@@ -15,7 +15,7 @@ class HourlyChart extends React.Component {
                     }
                 },
                 yaxis: {
-                    decimalsInFloat: 0
+                    decimalsInFloat: 1
                 },
                 title: {
                     text: 'Hourly Graph',
@@ -26,12 +26,12 @@ class HourlyChart extends React.Component {
                     align: 'center'
                 },
                 stroke: {
-                    curve: 'smooth',
-                    width: 3
+                    curve: 'smooth'
                 },
                 markers: {
                     size: 0
-                }
+                },
+                colors: ["#9fcafe"]
             },
             series: [
                 {

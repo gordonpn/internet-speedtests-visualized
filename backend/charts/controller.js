@@ -12,31 +12,51 @@ exports.hourlyAverage = (req, res) => {
     const entries = Object.entries(data);
 
     for (const [key, value] of entries) {
+        if (!isRelevant(key)) {
+            continue;
+        }
+
         let hour = key.substring(key.indexOf('_') + 1, key.indexOf(':'));
         let minutes = parseInt(key.substring(key.indexOf(':') + 1, key.length));
 
-        if (minutes >= 15 && minutes < 45) {
-            let secondHalf = hour + ":30";
-            if (!map.has(secondHalf)) {
-                map.set(secondHalf, [value]);
-            }
-            map.get(secondHalf).push(value);
-        } else {
-            let firstHalf = hour + ":00";
-            if (!map.has(firstHalf)) {
-                map.set(firstHalf, [value]);
-            }
-            map.get(firstHalf).push(value);
+        switch (true) {
+            case minutes >= 39 && minutes >= 53:
+                let fourthQuarter = hour + ":45";
+                if (!map.has(fourthQuarter)) {
+                    map.set(fourthQuarter, [value]);
+                }
+                map.get(fourthQuarter).push(value);
+                break;
+            case minutes >= 9 && minutes <= 23:
+                let secondQuarter = hour + ":15";
+                if (!map.has(secondQuarter)) {
+                    map.set(secondQuarter, [value]);
+                }
+                map.get(secondQuarter).push(value);
+                break;
+            case minutes >= 24 && minutes <= 38:
+                let thirdQuarter = hour + ":30";
+                if (!map.has(thirdQuarter)) {
+                    map.set(thirdQuarter, [value]);
+                }
+                map.get(thirdQuarter).push(value);
+                break;
+            default:
+                let firstQuarter = hour + ":00";
+                if (!map.has(firstQuarter)) {
+                    map.set(firstQuarter, [value]);
+                }
+                map.get(firstQuarter).push(value);
+                break;
         }
     }
 
     for (const [key, value] of map.entries()) {
         let sum = value.reduce((previous, current) => current += previous);
         let average = sum / value.length;
-        modifiedData.set(key, average);
+        modifiedData.set(key, average.toFixed(1));
     }
 
-    lastFetched = Date.now();
     res.send(JSON.stringify([...new Map([...modifiedData.entries()].sort())]));
 };
 
@@ -70,7 +90,6 @@ exports.dailyAverage = (req, res) => {
         }
         index++;
     }
-    lastFetched = Date.now();
     res.send(JSON.stringify([...new Map([...modifiedData.entries()].sort())]));
 };
 
@@ -84,8 +103,11 @@ exports.weeklyAverage = (req, res) => {
     const entries = Object.entries(data);
 
     for (const [key, value] of entries) {
-        let currentDate = key.substring(0, key.indexOf('_'));
-        let currentDay = getWeekDay(currentDate);
+        if (!isRelevant(key)) {
+            continue;
+        }
+
+        let currentDay = getWeekDay(key);
 
         if (!map.has(currentDay)) {
             map.set(currentDay, [value]);
@@ -96,10 +118,8 @@ exports.weeklyAverage = (req, res) => {
     for (const [key, value] of map.entries()) {
         let sum = value.reduce((previous, current) => current += previous);
         let average = sum / value.length;
-        modifiedData.set(key, average);
+        modifiedData.set(key, Math.round(average));
     }
-
-    lastFetched = Date.now();
     res.send(JSON.stringify([...new Map([...modifiedData.entries()])]));
 };
 
@@ -110,11 +130,21 @@ function getNewData() {
         delete require.cache[require.resolve(dataSource)];
         console.log("Fetching new data");
         data = require(dataSource);
+        lastFetched = Date.now();
     }
     console.log("Returning cached data");
 }
 
-function getWeekDay(date) {
+function getWeekDay(rawString) {
+    let date = rawString.substring(0, rawString.indexOf('_'));
     let weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return weekdays[new Date(date).getUTCDay()];
+}
+
+function isRelevant(rawString) {
+    let dateNow = Date.now();
+    let parsedDate = rawString.substring(0, rawString.indexOf('_'));
+    let date = new Date(parsedDate).getTime();
+    let daysDiff = (dateNow - date) / (1000 * 3600 * 24);
+    return daysDiff <= 30;
 }

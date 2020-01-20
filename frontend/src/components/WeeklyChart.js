@@ -23,12 +23,12 @@ class WeeklyChart extends React.Component {
                     align: 'center'
                 },
                 stroke: {
-                    curve: 'smooth',
-                    width: 3
+                    curve: 'smooth'
                 },
                 markers: {
                     size: 0
-                }
+                },
+                colors: ["#9fcafe"]
             },
             series: [
                 {

@@ -14,9 +14,10 @@ function App() {
             <Container>
                 <Card className="border-0 shadow my-5">
                     <Card.Body className="p-5">
-                        <h1 className="font-weight-light">ISP Speed Expectations vs Reality</h1>
+                        <h1 className="font-weight-light">ISP Speed Expectations vs Reality</h1><br/>
                         <p className="lead">Over several months, I collected speedtest data to compare with what the
-                            Internet Service Provider advertises and the reality of it.</p>
+                            Internet Service Provider advertises and the reality of it. While taking into factors such as how many devices are using the bandwidth and external factors.</p>
+                        <br/>
                         <hr/>
                         <Container>
                             <Row>
@@ -27,13 +28,13 @@ function App() {
                             <br/>
                             <Row>
                                 <Col>
-                                    <DailyChart/>
+                                    <WeeklyChart/>
                                 </Col>
                             </Row>
                             <br/>
                             <Row>
                                 <Col>
-                                    <WeeklyChart/>
+                                    <DailyChart/>
                                 </Col>
                             </Row>
                         </Container>
