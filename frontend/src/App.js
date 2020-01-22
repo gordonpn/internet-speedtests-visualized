@@ -15,8 +15,7 @@ function App() {
                 <Card className="border-0 shadow my-5">
                     <Card.Body className="p-5">
                         <h1 className="font-weight-light">ISP Speed Expectations vs Reality</h1><br/>
-                        <p className="lead">Over several months, I collected speedtest data to compare with what the
-                            Internet Service Provider advertises and the reality of it. While taking into factors such as how many devices are using the bandwidth and external factors.</p>
+                        <p className="lead">Over several months, I collected speedtest data out of curiosity to visualize fluctuations.</p>
                         <br/>
                         <hr/>
                         <Container id="content-desktop">
