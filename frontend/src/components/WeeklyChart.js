@@ -3,7 +3,7 @@ import Chart from "react-apexcharts";
 import Axios from "axios";
 
 class WeeklyChart extends React.Component {
-        constructor(props) {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -12,7 +12,9 @@ class WeeklyChart extends React.Component {
                     categories: []
                 },
                 yaxis: {
-                    decimalsInFloat: 0
+                    decimalsInFloat: 0,
+                    min: 39,
+                    max: 42
                 },
                 title: {
                     text: 'Weekly Graph',

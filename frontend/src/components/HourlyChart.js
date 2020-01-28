@@ -15,7 +15,9 @@ class HourlyChart extends React.Component {
                     }
                 },
                 yaxis: {
-                    decimalsInFloat: 1
+                    decimalsInFloat: 1,
+                    min: 38,
+                    max: 43
                 },
                 title: {
                     text: 'Hourly Graph',
