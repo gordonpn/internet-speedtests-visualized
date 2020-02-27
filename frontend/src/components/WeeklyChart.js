@@ -12,9 +12,9 @@ class WeeklyChart extends React.Component {
                     categories: []
                 },
                 yaxis: {
-                    decimalsInFloat: 0,
-                    min: 39,
-                    max: 42
+                    decimalsInFloat: 1,
+                    max: 42,
+                    min: 39
                 },
                 title: {
                     text: 'Weekly Graph',
@@ -48,16 +48,22 @@ class WeeklyChart extends React.Component {
     async loadData() {
         await Axios.get('/api/weekly')
             .then(result => {
-                let xaxis = [];
-                let yaxis = [];
+                const xaxis = [];
+                const yaxis = [];
                 result.data.forEach(item => {
                     xaxis.push(item[0]);
                     yaxis.push(item[1])
                 });
+                const max_value = Math.max(...yaxis) + 1;
+                const min_value = Math.min(...yaxis) - 1;
                 this.setState({
                     options: {
                         xaxis: {
                             categories: xaxis
+                        },
+                        yaxis: {
+                            max: max_value,
+                            min: min_value
                         }
                     },
                     series: [

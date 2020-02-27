@@ -84,7 +84,7 @@ exports.dailyAverage = (req, res) => {
 
         if (currentItem !== nextItem) {
             let average = currentSum / count;
-            modifiedData.set(currentItem, average);
+            modifiedData.set(currentItem, average.toFixed(1));
             currentSum = 0;
             count = 0;
         }
@@ -118,7 +118,7 @@ exports.weeklyAverage = (req, res) => {
     for (const [key, value] of map.entries()) {
         let sum = value.reduce((previous, current) => current += previous);
         let average = sum / value.length;
-        modifiedData.set(key, Math.round(average));
+        modifiedData.set(key, average.toFixed(1));
     }
     res.send(JSON.stringify([...new Map([...modifiedData.entries()])]));
 };

@@ -15,7 +15,9 @@ class DailyChart extends React.Component {
                     }
                 },
                 yaxis: {
-                    decimalsInFloat: 0
+                    decimalsInFloat: 1,
+                    max: 44,
+                    min: 24
                 },
                 title: {
                     text: 'Daily Graph',
@@ -55,10 +57,16 @@ class DailyChart extends React.Component {
                     xaxis.push(item[0]);
                     yaxis.push(item[1])
                 });
+                const max_value = Math.max(...yaxis) + 1;
+                const min_value = Math.min(...yaxis) - 1;
                 this.setState({
                     options: {
                         xaxis: {
                             categories: xaxis
+                        },
+                        yaxis: {
+                            max: max_value,
+                            min: min_value
                         }
                     },
                     series: [
