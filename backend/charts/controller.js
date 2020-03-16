@@ -1,14 +1,14 @@
-let dataSource = './reader';
+const dataSource = './reader';
 let data = require(dataSource);
 let lastFetched = Date.now();
 
 exports.hourlyAverage = (req, res) => {
-    let currentTime = Date.now();
+    const currentTime = Date.now();
     console.log(`Hourly data requested at ${currentTime}`);
     getNewData();
 
-    let map = new Map();
-    let modifiedData = new Map();
+    const map = new Map();
+    const modifiedData = new Map();
     const entries = Object.entries(data);
 
     for (const [key, value] of entries) {
@@ -16,44 +16,19 @@ exports.hourlyAverage = (req, res) => {
             continue;
         }
 
-        let hour = key.substring(key.indexOf('_') + 1, key.indexOf(':'));
-        let minutes = parseInt(key.substring(key.indexOf(':') + 1, key.length));
+        const hour = key.substring(key.indexOf('_') + 1, key.indexOf(':'));
 
-        switch (true) {
-            case minutes >= 39 && minutes >= 53:
-                let fourthQuarter = hour + ":45";
-                if (!map.has(fourthQuarter)) {
-                    map.set(fourthQuarter, [value]);
-                }
-                map.get(fourthQuarter).push(value);
-                break;
-            case minutes >= 9 && minutes <= 23:
-                let secondQuarter = hour + ":15";
-                if (!map.has(secondQuarter)) {
-                    map.set(secondQuarter, [value]);
-                }
-                map.get(secondQuarter).push(value);
-                break;
-            case minutes >= 24 && minutes <= 38:
-                let thirdQuarter = hour + ":30";
-                if (!map.has(thirdQuarter)) {
-                    map.set(thirdQuarter, [value]);
-                }
-                map.get(thirdQuarter).push(value);
-                break;
-            default:
-                let firstQuarter = hour + ":00";
-                if (!map.has(firstQuarter)) {
-                    map.set(firstQuarter, [value]);
-                }
-                map.get(firstQuarter).push(value);
-                break;
+        let graphHour = hour + ":00";
+        if (!map.has(graphHour)) {
+            map.set(graphHour, [value])
+        } else {
+            map.get(graphHour).push(value)
         }
     }
 
     for (const [key, value] of map.entries()) {
-        let sum = value.reduce((previous, current) => current += previous);
-        let average = sum / value.length;
+        const sum = value.reduce((previous, current) => current += previous);
+        const average = sum / value.length;
         modifiedData.set(key, average.toFixed(1));
     }
 
@@ -61,18 +36,18 @@ exports.hourlyAverage = (req, res) => {
 };
 
 exports.dailyAverage = (req, res) => {
-    let currentTime = Date.now();
+    const currentTime = Date.now();
     console.log(`Daily date requested at ${currentTime}`);
     getNewData();
 
-    let modifiedData = new Map();
+    const modifiedData = new Map();
     const entries = Object.entries(data);
     let index = 0;
     let currentSum = 0;
     let count = 0;
 
     for (const [key, value] of entries) {
-        let currentItem = key.substring(0, key.indexOf('_'));
+        const currentItem = key.substring(0, key.indexOf('_'));
         let nextItem = "";
 
         if (index < entries.length - 1) {
@@ -83,7 +58,7 @@ exports.dailyAverage = (req, res) => {
         count++;
 
         if (currentItem !== nextItem) {
-            let average = currentSum / count;
+            const average = currentSum / count;
             modifiedData.set(currentItem, average.toFixed(1));
             currentSum = 0;
             count = 0;
@@ -94,12 +69,12 @@ exports.dailyAverage = (req, res) => {
 };
 
 exports.weeklyAverage = (req, res) => {
-    let currentTime = Date.now();
+    const currentTime = Date.now();
     console.log(`Weekly date requested at ${currentTime}`);
     getNewData();
 
-    let map = new Map();
-    let modifiedData = new Map();
+    const map = new Map();
+    const modifiedData = new Map();
     const entries = Object.entries(data);
 
     for (const [key, value] of entries) {
@@ -107,7 +82,7 @@ exports.weeklyAverage = (req, res) => {
             continue;
         }
 
-        let currentDay = getWeekDay(key);
+        const currentDay = getWeekDay(key);
 
         if (!map.has(currentDay)) {
             map.set(currentDay, [value]);
@@ -116,15 +91,15 @@ exports.weeklyAverage = (req, res) => {
     }
 
     for (const [key, value] of map.entries()) {
-        let sum = value.reduce((previous, current) => current += previous);
-        let average = sum / value.length;
+        const sum = value.reduce((previous, current) => current += previous);
+        const average = sum / value.length;
         modifiedData.set(key, average.toFixed(1));
     }
     res.send(JSON.stringify([...new Map([...modifiedData.entries()])]));
 };
 
 function getNewData() {
-    let currentTime = Date.now();
+    const currentTime = Date.now();
 
     if ((currentTime - lastFetched) > (60 * 60000)) {
         delete require.cache[require.resolve(dataSource)];
@@ -136,15 +111,15 @@ function getNewData() {
 }
 
 function getWeekDay(rawString) {
-    let date = rawString.substring(0, rawString.indexOf('_'));
-    let weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const date = rawString.substring(0, rawString.indexOf('_'));
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return weekdays[new Date(date).getUTCDay()];
 }
 
 function isRelevant(rawString) {
-    let dateNow = Date.now();
-    let parsedDate = rawString.substring(0, rawString.indexOf('_'));
-    let date = new Date(parsedDate).getTime();
-    let daysDiff = (dateNow - date) / (1000 * 3600 * 24);
+    const dateNow = Date.now();
+    const parsedDate = rawString.substring(0, rawString.indexOf('_'));
+    const date = new Date(parsedDate).getTime();
+    const daysDiff = (dateNow - date) / (1000 * 3600 * 24);
     return daysDiff <= 30;
 }
