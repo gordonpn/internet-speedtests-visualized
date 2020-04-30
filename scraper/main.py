@@ -72,7 +72,7 @@ class SpeedtestScraper:
     def insert_to_db(self, data: float) -> None:
         logger.debug("Inserting into collection")
         collection: Collection = self.connect_to_db()
-        recorded_time: datetime = datetime.datetime.utcnow()
+        recorded_time = datetime.datetime.utcnow()
         collection.insert_one(document={"time": recorded_time, "speed": data})
 
 

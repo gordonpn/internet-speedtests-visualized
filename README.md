@@ -1,24 +1,18 @@
 # ISP Speed: Expectations vs Reality
 
+## Motivation
+
+Mostly curiosity about how my home internet speed varies throughout the hours, days, weeks, months.
+
 ## Description
 
-The motivation for this project came from my curiosity to visualize the download speed provided by my Internet Service Provider (ISP) across hours/days/weeks/months.
-
-Over months, I collected data from speed tests and saved into a json file. 
-
-A front-end is in development to visualize all the data collected.
+The project is split into three Docker containers. One to perform the speedtests (scrape), one for the backend and another for the frontend.
 
 ---
-http://speed.gordon-pn.com
-
-![Website](https://img.shields.io/website?style=flat-square&url=http%3A%2F%2Fspeed.gordon-pn.com)
-![GitHub](https://img.shields.io/github/license/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
-
-![GitHub top language](https://img.shields.io/github/languages/top/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
-![GitHub language count](https://img.shields.io/github/languages/count/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
-
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
-![GitHub last commit](https://img.shields.io/github/last-commit/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
+[![Build Status](https://drone.gordon-pn.com/api/badges/gordonpn/isp-speed-expectation-vs-reality/status.svg)](https://drone.gordon-pn.com/gordonpn/isp-speed-expectation-vs-reality)
+![Healthchecks.io](https://healthchecks.io/badge/603efbcd-b70d-424d-91cc-6560ba83d5eb/Workecps.svg)
+![Last commit on develop](https://badgen.net/github/last-commit/gordonpn/isp-speed-expectation-vs-reality/develop)
+![License](https://badgen.net/github/license/gordonpn/isp-speed-expectation-vs-reality)
 
 ## Built with / technologies
 
@@ -28,35 +22,26 @@ http://speed.gordon-pn.com
 - React.js and Bootstrap CSS framework to build the front-end
     - ApexChart.js: charts library
 
-## Features
-
-Visualize speed test data across hours/days/weeks/months
-
 ## Getting started
 
 ### Prerequisites
 
 - Python3
 - Node.js
+- Docker and docker-compose
 
 ### Installing
 
 1.  Clone the repo
 2.  Install the Python requirements and Node dependencies
 ````bash
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 npm run installall
 ````
 
 ### Configuration
 
 ### Usage
-
-To collect data:
-
-```bash
-python3 ./DataCollector/speedtest_collector.py
-```
 
 To run the backend:
 
@@ -78,7 +63,7 @@ npm run start
 
 #### Use cases
 
-Data collection can be automated through Jenkins on a server of some sort. 
+Data scraping can be automated through any cron-like environment on server of some sort.
 
 ## Roadmap / Todo
 - [x] Finish frontend
@@ -87,4 +72,4 @@ Data collection can be automated through Jenkins on a server of some sort.
 
 ## License
 
-[MIT License](https://choosealicense.com/licenses/mit/)
+[MIT License](./LICENSE)
