@@ -5,6 +5,8 @@ services:
     build:
       context: ./scraper
       dockerfile: Dockerfile
+    environment:
+      - SCRAPER_HC_UUID
     depends_on:
       - speedtest-mongodb
   speedtest-mongodb:
