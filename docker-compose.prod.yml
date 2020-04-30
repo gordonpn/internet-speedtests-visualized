@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  speedtest-mongodb:
+    volumes:
+      - mongodb-speedtest:/data/db
+
+volumes:
+  mongodb-speedtest:
+    external:
+      name: mongodb-speedtest
