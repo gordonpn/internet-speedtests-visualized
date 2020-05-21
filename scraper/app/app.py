@@ -30,7 +30,7 @@ class SpeedtestScraper:
         logger.debug("Job pending")
         while True:
             schedule.run_pending()
-            time.sleep(1)
+            time.sleep(5 * 60)
 
     def job(self):
         try:
@@ -60,10 +60,7 @@ class SpeedtestScraper:
 
     def connect_to_db(self) -> Collection:
         logger.debug("Making connection to mongodb")
-        if "DEV_RUN" in os.environ:
-            host = "speedtest-mongodb-dev"
-        else:
-            host = "speedtest-mongodb"
+        host = "speedtest-mongodb"
         uri: str = f"mongodb://{self.db_username}:{self.db_password}@{host}:27017/{self.db_name}"
         connection: MongoClient = MongoClient(uri)
         db: Database = connection[self.db_name]
