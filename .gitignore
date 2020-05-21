@@ -363,3 +363,5 @@ hs_err_pid*
 .idea/pylint.xml
 /data.json
 backend/node_modules/
+*/.idea*
+

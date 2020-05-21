@@ -66,9 +66,16 @@ npm run start
 Data scraping can be automated through any cron-like environment on server of some sort.
 
 ## Roadmap / Todo
+
 - [x] Finish frontend
     - [x] Generate charts
 - [ ] Max and min lines for weekly and daily charts
+
+Check out the [open issues](https://github.com/gordonpn/isp-speed-expectation-vs-reality/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for ideas and features I have planned!
+
+## Authors
+
+Myself [@gordonpn](https://github.com/gordonpn)
 
 ## License
 

@@ -1,6 +1,12 @@
 FROM python:3.8-alpine
 
-RUN adduser --shell /bin/bash --uid 1000 --system --home /home/appuser --disabled-password appuser
+RUN adduser \
+  --disabled-password \
+  --home /home/appuser \
+  --shell /bin/bash \
+  --system \
+  --uid 1000 \
+  appuser
 
 COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
