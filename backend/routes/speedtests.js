@@ -24,7 +24,7 @@ speedTests.get("/hours", async (req, res) => {
 
 speedTests.get("/days", async (req, res) => {
   try {
-    const rawData = await SpeedTest.find();
+    const rawData = await SpeedTest.find({}, { _id: 0, time: 1, speed: 1 });
     const data = getMedian(rawData, "days");
     res.json(data);
   } catch (err) {
@@ -53,8 +53,19 @@ speedTests.get("/weekdays", async (req, res) => {
 
 speedTests.get("/weeks", async (req, res) => {
   try {
-    const rawData = await SpeedTest.find();
+    const rawData = await SpeedTest.find({}, { _id: 0, time: 1, speed: 1 });
     const data = getMedian(rawData, "weeks");
+    res.json(data);
+  } catch (err) {
+    req.log.error(err.message);
+    res.status(500).json({ message: "An error occurred" });
+  }
+});
+
+speedTests.get("/months", async (req, res) => {
+  try {
+    const rawData = await SpeedTest.find({}, { _id: 0, time: 1, speed: 1 });
+    const data = getMedian(rawData, "months");
     res.json(data);
   } catch (err) {
     req.log.error(err.message);

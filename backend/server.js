@@ -30,6 +30,6 @@ module.exports = { app, logger };
 
 /*
 todo
-rate rate limit
 cache (with redis maybe)
+dockerize
 */

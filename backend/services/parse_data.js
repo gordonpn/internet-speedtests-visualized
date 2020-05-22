@@ -22,6 +22,24 @@ const weekdayString = (num) => {
   return weekdays[num];
 };
 
+const monthString = (num) => {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  return months[num];
+};
+
 const getFilterType = (item, type) => {
   switch (type) {
     case "hours": {
@@ -36,6 +54,10 @@ const getFilterType = (item, type) => {
     }
     case "weeks": {
       return moment(item.time).week();
+    }
+    case "months": {
+      const monthNum = moment(item.time).month();
+      return monthString(monthNum);
     }
     default:
       throw new Error(`Something wrong type of: ${item}`);
