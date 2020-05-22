@@ -25,7 +25,10 @@ class SpeedtestScraper:
 
     def run(self):
         logger.debug("Setting schedule")
-        schedule.every(10).to(20).minutes.do(self.job)
+        if "DEV_RUN" in os.environ:
+            schedule.every(1).minutes.do(self.job)
+        else:
+            schedule.every(10).to(20).minutes.do(self.job)
 
         logger.debug("Job pending")
         while True:
@@ -70,7 +73,9 @@ class SpeedtestScraper:
         logger.debug("Inserting into collection")
         collection: Collection = self.connect_to_db()
         recorded_time = datetime.datetime.utcnow()
-        collection.insert_one(document={"time": recorded_time, "speed": data})
+        logger.debug(f"{collection=} {recorded_time=}, {data=}")
+        result = collection.insert_one(document={"time": recorded_time, "speed": data})
+        logger.debug(f"Insertion ID: {result.inserted_id}")
 
 
 def run():

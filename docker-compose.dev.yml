@@ -8,6 +8,11 @@ services:
     ports:
       - "127.0.0.1:27017:27017"
 
+  speedtest-scraper:
+      container_name: speedtest-scraper-dev
+      environment:
+        - DEV_RUN=true
+
 volumes:
   dev-mongodb-speedtest:
     external:

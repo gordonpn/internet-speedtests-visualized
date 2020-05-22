@@ -26,4 +26,10 @@ connectDb()
   })
   .catch((err) => logger.error(err));
 
-module.exports = { app };
+module.exports = { app, logger };
+
+/*
+todo
+rate rate limit
+cache (with redis maybe)
+*/

@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const speedtest = require("./speedtests");
 
-router.use("/", speedtest);
+router.use("/speedtests", speedtest);
 
 module.exports = router;

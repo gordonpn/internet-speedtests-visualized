@@ -16,7 +16,6 @@ services:
     restart: unless-stopped
 
   speedtest-scraper:
-    container_name: speedtest-scraper
     build:
       context: ./scraper
       dockerfile: Dockerfile
@@ -27,6 +26,7 @@ services:
       - MONGO_NON_ROOT_USERNAME
       - SCRAPER_HC_UUID
       - TZ
+    restart: unless-stopped
     depends_on:
       - speedtest-mongodb
 

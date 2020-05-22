@@ -10,7 +10,7 @@ const speedtestSchema = new mongoose.Schema(
       type: Number,
     },
   },
-  { collection: process.env.MONGODB_COLLECTION }
+  { collection: `collection.${process.env.MONGO_COLLECTION}` }
 );
 
 module.exports = mongoose.model("SpeedTest", speedtestSchema);
