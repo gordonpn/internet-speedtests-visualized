@@ -1,12 +1,13 @@
 const fs = require("fs");
+const { logger } = require("../server.js");
 
 function getLatestData() {
   try {
     const jsonString = fs.readFileSync("../data.json");
-    console.log(`Successfully read data.json at ${Date.now()}`);
+    logger.debug(`Successfully read data.json at ${Date.now()}`);
     return JSON.parse(jsonString);
   } catch (e) {
-    console.log(`Error parsing JSON string: ${e}`);
+    logger.debug(`Error parsing JSON string: ${e}`);
     return {};
   }
 }

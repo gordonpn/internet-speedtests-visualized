@@ -1,10 +1,18 @@
 const dataSource = "./reader";
 let data = require(dataSource);
 let lastFetched = Date.now();
+const { logger } = require("../server.js");
+
+/*
+todo
+connect to mongodb
+how to rate rate limit
+cache (with redis maybe)
+*/
 
 exports.hourlyAverage = (req, res) => {
   const currentTime = Date.now();
-  console.log(`Hourly data requested at ${currentTime}`);
+  logger.debug(`Hourly data requested at ${currentTime}`);
   getNewData();
 
   const map = new Map();
@@ -27,7 +35,7 @@ exports.hourlyAverage = (req, res) => {
   }
 
   for (const [key, value] of map.entries()) {
-    const sum = value.reduce((previous, current) => (current += previous));
+    const sum = value.reduce((previous, current) => current + previous, 0);
     const average = sum / value.length;
     modifiedData.set(key, average.toFixed(1));
   }
@@ -37,7 +45,7 @@ exports.hourlyAverage = (req, res) => {
 
 exports.dailyAverage = (req, res) => {
   const currentTime = Date.now();
-  console.log(`Daily date requested at ${currentTime}`);
+  logger.debug(`Daily date requested at ${currentTime}`);
   getNewData();
 
   const modifiedData = new Map();
@@ -70,7 +78,7 @@ exports.dailyAverage = (req, res) => {
 
 exports.weeklyAverage = (req, res) => {
   const currentTime = Date.now();
-  console.log(`Weekly date requested at ${currentTime}`);
+  logger.debug(`Weekly date requested at ${currentTime}`);
   getNewData();
 
   const map = new Map();
@@ -103,11 +111,11 @@ function getNewData() {
 
   if (currentTime - lastFetched > 60 * 60000) {
     delete require.cache[require.resolve(dataSource)];
-    console.log("Fetching new data");
+    logger.debug("Fetching new data");
     data = require(dataSource);
     lastFetched = Date.now();
   }
-  console.log("Returning cached data");
+  logger.debug("Returning cached data");
 }
 
 function getWeekDay(rawString) {

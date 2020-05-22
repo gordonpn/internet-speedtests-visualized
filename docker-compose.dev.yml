@@ -5,6 +5,8 @@ services:
     container_name: speedtest-mongodb-dev
     volumes:
       - dev-mongodb-speedtest:/data/db
+    ports:
+      - "127.0.0.1:27017:27017"
 
 volumes:
   dev-mongodb-speedtest:

@@ -5,6 +5,8 @@ services:
     container_name: speedtest-mongodb
     volumes:
       - mongodb-speedtest:/data/db
+    expose:
+      - 27017
 
 volumes:
   mongodb-speedtest:
