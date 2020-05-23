@@ -5,6 +5,29 @@ import Chart from "react-apexcharts";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+const getSubtitle = (type) => {
+  switch (type) {
+    case "hours": {
+      return "Speeds shown across a day";
+    }
+    case "days": {
+      return "Speed on each day of the year";
+    }
+    case "weekdays": {
+      return "Speeds across the week";
+    }
+    case "weeks": {
+      return "Speed for each week of the year";
+    }
+    case "months": {
+      return "Speeds across months";
+    }
+    default: {
+      return "";
+    }
+  }
+};
+
 export default function Charts(props) {
   const { type } = props;
   const [loaded, setLoaded] = useState(false);
@@ -24,10 +47,16 @@ export default function Charts(props) {
       title: {
         text: "",
         align: "center",
+        style: {
+          fontSize: "16px",
+        },
       },
       subtitle: {
         text: "",
         align: "center",
+        style: {
+          fontSize: "14px",
+        },
       },
       stroke: {
         curve: "smooth",
@@ -61,8 +90,10 @@ export default function Charts(props) {
       updatedOptions.series[0].data = [...values];
       updatedOptions.options.yaxis.max = maxValue;
       updatedOptions.options.yaxis.min = minValue;
-      updatedOptions.options.title.text = `${type}`;
-      updatedOptions.options.subtitle.text = `${type}`;
+      updatedOptions.options.title.text = `${type
+        .charAt(0)
+        .toUpperCase()}${type.slice(1)}`;
+      updatedOptions.options.subtitle.text = getSubtitle(type);
       setState(updatedOptions);
       setLoaded(true);
     };
@@ -85,7 +116,7 @@ export default function Charts(props) {
 }
 
 Charts.propTypes = {
-  type: PropTypes.string,
+  type: PropTypes.oneOf(["hours", "days", "weekdays", "weeks", "months"]),
 };
 
 Charts.defaultProps = {
