@@ -17,6 +17,7 @@ steps:
         {{build.link}}
       webhook:
         from_secret: SLACK_WEBHOOK_URL
+
   - name: deploy prod
     image: docker/compose:1.25.5
     when:
@@ -43,6 +44,7 @@ steps:
         path: /var/run/docker.sock
     commands:
       - /bin/sh /drone/src/.docker/scripts/deploy_prod.sh
+
   - name: slack after
     image: plugins/slack
     failure: ignore
@@ -70,4 +72,3 @@ trigger:
     - push
   branch:
     - master
-    - develop

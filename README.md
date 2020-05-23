@@ -1,4 +1,4 @@
-# ISP Speed: Expectations vs Reality
+# Internet Speed Tests Visualized
 
 ## Motivation
 
@@ -6,21 +6,20 @@ Mostly curiosity about how my home internet speed varies throughout the hours, d
 
 ## Description
 
-The project is split into three Docker containers. One to perform the speedtests (scrape), one for the backend and another for the frontend.
+The project is split into three Docker containers. One to perform the speedtests (scrape data), one for the backend and another for the frontend.
 
 ---
-[![Build Status](https://drone.gordon-pn.com/api/badges/gordonpn/isp-speed-expectation-vs-reality/status.svg)](https://drone.gordon-pn.com/gordonpn/isp-speed-expectation-vs-reality)
+[![Build Status](https://drone.gordon-pn.com/api/badges/gordonpn/internet-speedtests-visualized/status.svg)](https://drone.gordon-pn.com/gordonpn/internet-speedtests-visualized)
 ![Healthchecks.io](https://healthchecks.io/badge/b37af876-e3fd-4dbd-9f62-b59fbd16fcf1/uryOUBpi.svg)
-![Last commit on develop](https://badgen.net/github/last-commit/gordonpn/isp-speed-expectation-vs-reality/develop)
-![License](https://badgen.net/github/license/gordonpn/isp-speed-expectation-vs-reality)
+![Last commit on develop](https://badgen.net/github/last-commit/gordonpn/internet-speedtests-visualized/develop)
+![License](https://badgen.net/github/license/gordonpn/internet-speedtests-visualized)
 
 ## Built with / technologies
 
-- Python: program to collect the speed test data at random times
-    - speedtest library
+- Python: script in a Docker container to periodically scrape data
 - Node.js and Express.js for the API endpoints
 - React.js and Bootstrap CSS framework to build the front-end
-    - ApexChart.js: charts library
+  - ApexChart.js: charts library
 
 ## Getting started
 
@@ -32,9 +31,10 @@ The project is split into three Docker containers. One to perform the speedtests
 
 ### Installing
 
-1.  Clone the repo
-2.  Install the Python requirements and Node dependencies
-````bash
+1. Clone the repo
+2. Install the Python requirements and Node dependencies
+
+````sh
 pip install -r requirements.txt
 npm run installall
 ````
@@ -43,21 +43,21 @@ npm run installall
 
 ### Usage
 
-To run the backend:
+To run the backend for development purposes:
 
-```bash
-cd ./backend && npm start
+```sh
+cd ./backend && npm run dev
 ```
 
 To run the frontend for development purposes:
 
-```bash
+```sh
 cd ./frontend && npm start
 ```
 
 Or to start both:
 
-````bash
+````sh
 npm run start
 ````
 
@@ -66,10 +66,6 @@ npm run start
 Data scraping can be automated through any cron-like environment on server of some sort.
 
 ## Roadmap / Todo
-
-- [x] Finish frontend
-    - [x] Generate charts
-- [ ] Max and min lines for weekly and daily charts
 
 Check out the [open issues](https://github.com/gordonpn/isp-speed-expectation-vs-reality/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for ideas and features I have planned!
 
