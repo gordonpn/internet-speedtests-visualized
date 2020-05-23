@@ -1,12 +1,8 @@
 import React from "react";
-import "./App.css";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
-import HourlyChart from "./components/HourlyChart";
-import WeeklyChart from "./components/WeeklyChart";
-import DailyChart from "./components/DailyChart";
+import Content from "./components/Content";
+import "./App.css";
 
 function App() {
   return (
@@ -26,23 +22,7 @@ function App() {
             <br />
             <hr />
             <Container id="content-desktop">
-              <Row>
-                <Col>
-                  <HourlyChart />
-                </Col>
-              </Row>
-              <br />
-              <Row>
-                <Col>
-                  <WeeklyChart />
-                </Col>
-              </Row>
-              <br />
-              <Row>
-                <Col>
-                  <DailyChart />
-                </Col>
-              </Row>
+              <Content />
             </Container>
             <Container id="content-mobile">
               <h4>
