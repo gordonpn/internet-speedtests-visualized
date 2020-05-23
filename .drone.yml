@@ -1,0 +1,73 @@
+---
+kind: pipeline
+type: docker
+name: deploy
+
+steps:
+  - name: slack before
+    image: plugins/slack
+    failure: ignore
+    settings:
+      channel: drone-ci
+      template: >
+        {{build.event}} on branch {{build.branch}} from repo {{repo.name}}
+
+        build #{{build.number}} started!
+
+        {{build.link}}
+      webhook:
+        from_secret: SLACK_WEBHOOK_URL
+  - name: deploy prod
+    image: docker/compose:1.25.5
+    when:
+      branch:
+        - master
+    environment:
+      COMPOSE_PROJECT_NAME: speedtest
+      MONGO_COLLECTION:
+        from_secret: MONGO_COLLECTION
+      MONGO_INITDB_DATABASE:
+        from_secret: MONGO_INITDB_DATABASE
+      MONGO_INITDB_ROOT_PASSWORD:
+        from_secret: MONGO_INITDB_ROOT_PASSWORD
+      MONGO_INITDB_ROOT_USERNAME:
+        from_secret: MONGO_INITDB_ROOT_USERNAME
+      MONGO_NON_ROOT_PASSWORD:
+        from_secret: MONGO_NON_ROOT_PASSWORD
+      MONGO_NON_ROOT_USERNAME:
+        from_secret: MONGO_NON_ROOT_USERNAME
+      SCRAPER_HC_UUID:
+        from_secret: SCRAPER_HC_UUID
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - /bin/sh /drone/src/.docker/scripts/deploy_prod.sh
+  - name: slack after
+    image: plugins/slack
+    failure: ignore
+    settings:
+      channel: drone-ci
+      template: >
+        {{repo.name}}:
+        {{#success build.status}}
+        build #{{build.number}} succeeded!
+        {{else}}
+        build #{{build.number}} failed!
+        {{/success}}
+      webhook:
+        from_secret: SLACK_WEBHOOK_URL
+    when:
+      status: [ success, failure ]
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+
+trigger:
+  event:
+    - push
+  branch:
+    - master
+    - develop
