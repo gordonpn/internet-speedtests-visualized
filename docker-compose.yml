@@ -15,6 +15,10 @@ services:
       - ./.docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     restart: unless-stopped
 
+  speedtest-redis:
+    image: redis:latest
+    restart: unless-stopped
+
   speedtest-scraper:
     build:
       context: ./scraper

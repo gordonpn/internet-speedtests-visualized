@@ -8,6 +8,11 @@ services:
     expose:
       - 27017
 
+  speedtest-redis:
+    container_name: speedtest-redis
+    expose:
+      - 6379
+
   speedtest-scraper:
       container_name: speedtest-scraper
 

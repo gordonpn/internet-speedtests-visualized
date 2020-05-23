@@ -4,6 +4,7 @@ const expressPino = require("express-pino-logger");
 const { connectDb } = require("./models/index");
 const routes = require("./routes/index");
 require("dotenv").config();
+require("./utils/redis_client");
 
 const logger = pino({
   level: process.env.LOG_LEVEL || "info",
@@ -21,15 +22,11 @@ connectDb()
   .then(async () => {
     logger.info("Connected to MongoDB");
     app.listen(port, () =>
-      logger.info(`App listening on port http://${hostname}:${port}/`)
+      logger.info(`Express listening on port http://${hostname}:${port}/`)
     );
   })
   .catch((err) => logger.error(err));
 
 module.exports = { app, logger };
 
-/*
-todo
-cache (with redis maybe)
-dockerize
-*/
+// todo dockerize
