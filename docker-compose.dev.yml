@@ -14,9 +14,16 @@ services:
       - "127.0.0.1:6379:6379"
 
   speedtest-scraper:
-      container_name: speedtest-scraper-dev
-      environment:
-        - DEV_RUN=true
+    container_name: speedtest-scraper-dev
+    environment:
+      - DEV_RUN=true
+
+  speedtest-server:
+    container_name: speedtest-server-dev
+    environment:
+      - LOG_LEVEL=debug
+    ports:
+      - "127.0.0.1:3000:3000"
 
 volumes:
   dev-mongodb-speedtest:

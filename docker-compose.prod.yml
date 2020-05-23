@@ -14,7 +14,12 @@ services:
       - 6379
 
   speedtest-scraper:
-      container_name: speedtest-scraper
+    container_name: speedtest-scraper
+
+  speedtest-server:
+    container_name: speedtest-server
+    expose:
+      - 3000
 
 volumes:
   mongodb-speedtest:

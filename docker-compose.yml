@@ -10,7 +10,7 @@ services:
       - MONGO_NON_ROOT_PASSWORD
       - MONGO_NON_ROOT_ROLE=readWrite
       - MONGO_NON_ROOT_USERNAME
-      - TZ="America/Montreal"
+      - TZ=America/Montreal
     volumes:
       - ./.docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     restart: unless-stopped
@@ -29,8 +29,23 @@ services:
       - MONGO_NON_ROOT_PASSWORD
       - MONGO_NON_ROOT_USERNAME
       - SCRAPER_HC_UUID
-      - TZ="America/Montreal"
+      - TZ=America/Montreal
     restart: unless-stopped
     depends_on:
       - speedtest-mongodb
 
+  speedtest-server:
+    init: true
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_COLLECTION
+      - MONGO_INITDB_DATABASE
+      - MONGO_NON_ROOT_PASSWORD
+      - MONGO_NON_ROOT_USERNAME
+      - TZ=America/Montreal
+    restart: unless-stopped
+    depends_on:
+      - speedtest-mongodb
+      - speedtest-redis

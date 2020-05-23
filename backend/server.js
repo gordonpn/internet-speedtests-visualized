@@ -8,8 +8,8 @@ require("./utils/redis_client");
 
 const logger = pino({
   level: process.env.LOG_LEVEL || "info",
-  prettyPrint: { colorize: true },
 });
+
 const expressLogger = expressPino({ logger });
 const app = express();
 app.use(express.json());

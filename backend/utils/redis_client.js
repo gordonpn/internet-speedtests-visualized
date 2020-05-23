@@ -6,7 +6,6 @@ require("dotenv").config();
 
 const logger = pino({
   level: process.env.LOG_LEVEL || "info",
-  prettyPrint: { colorize: true },
 });
 
 const host = process.env.REDIS_HOST || "speedtest-redis";

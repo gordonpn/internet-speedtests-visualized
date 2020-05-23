@@ -1,0 +1,9 @@
+.dockerignore
+.drone.yml
+.eslintrc.js
+.idea
+.vscode
+LICENSE
+README.md
+node_modules
+npm-debug.log
