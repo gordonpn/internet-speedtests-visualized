@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+
+  speedtest-mongodb:
+    container_name: speedtest-mongodb
+    volumes:
+      - mongodb-speedtest:/data/db
+    expose:
+      - 27017
+
+  speedtest-scraper:
+      container_name: speedtest-scraper
+
+volumes:
+  mongodb-speedtest:
+    external:
+      name: mongodb-speedtest

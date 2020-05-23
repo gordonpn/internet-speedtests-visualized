@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+
+  speedtest-mongodb:
+    container_name: speedtest-mongodb-dev
+    volumes:
+      - dev-mongodb-speedtest:/data/db
+    ports:
+      - "127.0.0.1:27017:27017"
+
+  speedtest-scraper:
+      container_name: speedtest-scraper-dev
+      environment:
+        - DEV_RUN=true
+
+volumes:
+  dev-mongodb-speedtest:
+    external:
+      name: dev-mongodb-speedtest

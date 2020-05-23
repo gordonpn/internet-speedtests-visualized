@@ -1,36 +1,25 @@
-# ISP Speed: Expectations vs Reality
+# Internet Speed Tests Visualized
+
+## Motivation
+
+Mostly curiosity about how my home internet speed varies throughout the hours, days, weeks, months.
 
 ## Description
 
-The motivation for this project came from my curiosity to visualize the download speed provided by my Internet Service Provider (ISP) across hours/days/weeks/months.
-
-Over months, I collected data from speed tests and saved into a json file. 
-
-A front-end is in development to visualize all the data collected.
+The project is split into three Docker containers. One to perform the speedtests (scrape data), one for the backend and another for the frontend.
 
 ---
-http://speed.gordon-pn.com
-
-![Website](https://img.shields.io/website?style=flat-square&url=http%3A%2F%2Fspeed.gordon-pn.com)
-![GitHub](https://img.shields.io/github/license/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
-
-![GitHub top language](https://img.shields.io/github/languages/top/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
-![GitHub language count](https://img.shields.io/github/languages/count/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
-
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
-![GitHub last commit](https://img.shields.io/github/last-commit/gpnn/isp-speed-expectation-vs-reality?style=flat-square)
+[![Build Status](https://drone.gordon-pn.com/api/badges/gordonpn/internet-speedtests-visualized/status.svg)](https://drone.gordon-pn.com/gordonpn/internet-speedtests-visualized)
+![Healthchecks.io](https://healthchecks.io/badge/b37af876-e3fd-4dbd-9f62-b59fbd16fcf1/uryOUBpi.svg)
+![Last commit on develop](https://badgen.net/github/last-commit/gordonpn/internet-speedtests-visualized/develop)
+![License](https://badgen.net/github/license/gordonpn/internet-speedtests-visualized)
 
 ## Built with / technologies
 
-- Python: program to collect the speed test data at random times
-    - speedtest library
+- Python: script in a Docker container to periodically scrape data
 - Node.js and Express.js for the API endpoints
 - React.js and Bootstrap CSS framework to build the front-end
-    - ApexChart.js: charts library
-
-## Features
-
-Visualize speed test data across hours/days/weeks/months
+  - ApexChart.js: charts library
 
 ## Getting started
 
@@ -38,13 +27,15 @@ Visualize speed test data across hours/days/weeks/months
 
 - Python3
 - Node.js
+- Docker and docker-compose
 
 ### Installing
 
-1.  Clone the repo
-2.  Install the Python requirements and Node dependencies
-````bash
-pip3 install -r requirements.txt
+1. Clone the repo
+2. Install the Python requirements and Node dependencies
+
+````sh
+pip install -r requirements.txt
 npm run installall
 ````
 
@@ -52,39 +43,36 @@ npm run installall
 
 ### Usage
 
-To collect data:
+To run the backend for development purposes:
 
-```bash
-python3 ./DataCollector/speedtest_collector.py
-```
-
-To run the backend:
-
-```bash
-cd ./backend && npm start
+```sh
+cd ./backend && npm run dev
 ```
 
 To run the frontend for development purposes:
 
-```bash
+```sh
 cd ./frontend && npm start
 ```
 
 Or to start both:
 
-````bash
+````sh
 npm run start
 ````
 
 #### Use cases
 
-Data collection can be automated through Jenkins on a server of some sort. 
+Data scraping can be automated through any cron-like environment on server of some sort.
 
 ## Roadmap / Todo
-- [x] Finish frontend
-    - [x] Generate charts
-- [ ] Max and min lines for weekly and daily charts
+
+Check out the [open issues](https://github.com/gordonpn/isp-speed-expectation-vs-reality/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for ideas and features I have planned!
+
+## Authors
+
+Myself [@gordonpn](https://github.com/gordonpn)
 
 ## License
 
-[MIT License](https://choosealicense.com/licenses/mit/)
+[MIT License](./LICENSE)
