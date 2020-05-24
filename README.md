@@ -6,7 +6,13 @@ Mostly curiosity about how my home internet speed varies throughout the hours, d
 
 ## Description
 
-The project is split into three Docker containers. One to perform the speedtests (scrape data), one for the backend and another for the frontend.
+The project is split into five Docker containers:
+
+- Python scraper, to collect the data
+- Backend Express.js server
+- Frontend React.js
+- Redis caching server
+- MongoDB database
 
 ---
 [![Build Status](https://drone.gordon-pn.com/api/badges/gordonpn/internet-speedtests-visualized/status.svg)](https://drone.gordon-pn.com/gordonpn/internet-speedtests-visualized)
@@ -22,6 +28,9 @@ The project is split into three Docker containers. One to perform the speedtests
 - Node.js and Express.js for the API endpoints
 - React.js and Bootstrap CSS framework to build the front-end
   - ApexChart.js: charts library
+- Docker and Docker-Compose
+- Redis cache server
+- NGINX
 
 ## Getting started
 
@@ -37,8 +46,9 @@ The project is split into three Docker containers. One to perform the speedtests
 2. Install the Python requirements and Node dependencies
 
 ````sh
-pip install -r requirements.txt
-npm run installall
+cd ./scraper && pip install -r requirements.txt
+cd ./backend && npm install
+cd ./frontend && npm install
 ````
 
 ### Configuration
@@ -54,14 +64,14 @@ cd ./backend && npm run dev
 To run the frontend for development purposes:
 
 ```sh
-cd ./frontend && npm start
+cd ./frontend && npm run start
 ```
 
-Or to start both:
+Start the whole stack using docker-compose:
 
-````sh
-npm run start
-````
+```sh
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+```
 
 #### Use cases
 
