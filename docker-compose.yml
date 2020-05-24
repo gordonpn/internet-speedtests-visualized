@@ -49,3 +49,16 @@ services:
     depends_on:
       - speedtest-mongodb
       - speedtest-redis
+
+  speedtest-client:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - TZ=America/Montreal
+    restart: unless-stopped
+    depends_on:
+      - speedtest-mongodb
+      - speedtest-redis
+      - speedtest-server
+

@@ -14,6 +14,8 @@ The project is split into three Docker containers. One to perform the speedtests
 ![Last commit on develop](https://badgen.net/github/last-commit/gordonpn/internet-speedtests-visualized/develop)
 ![License](https://badgen.net/github/license/gordonpn/internet-speedtests-visualized)
 
+[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/gordonpn)
+
 ## Built with / technologies
 
 - Python: script in a Docker container to periodically scrape data

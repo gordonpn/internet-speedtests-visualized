@@ -17,7 +17,7 @@ function App() {
             <br />
             <p className="lead">
               I collected speedtest data out of curiosity to visualize change
-              and trends.
+              and trends. Here are the results.
             </p>
             <br />
             <hr />

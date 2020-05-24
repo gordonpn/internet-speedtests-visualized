@@ -21,6 +21,13 @@ services:
     expose:
       - 3000
 
+  speedtest-client:
+    container_name: speedtest-client
+    expose:
+      - "80"
+    healthcheck:
+      test: curl --fail -s http://localhost:80/ || exit 1
+
 volumes:
   mongodb-speedtest:
     external:
