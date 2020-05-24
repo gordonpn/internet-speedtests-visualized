@@ -1,12 +1,14 @@
 ---
 kind: pipeline
 type: docker
-name: deploy
+name: notification
+
+trigger:
+  event: [ push ]
 
 steps:
   - name: slack before
     image: plugins/slack
-    failure: ignore
     settings:
       channel: drone-ci
       template: >
@@ -18,6 +20,50 @@ steps:
       webhook:
         from_secret: SLACK_WEBHOOK_URL
 
+---
+kind: pipeline
+type: docker
+name: security
+
+trigger:
+  event: [ push ]
+
+steps:
+  - name: test security for scraper
+    image: python:3.8-buster
+    commands:
+      - cd ./scraper
+      - pip install bandit
+      - bandit -r ./
+  - name: slack after test
+    image: plugins/slack
+    failure: ignore
+    settings:
+      channel: drone-ci
+      template: >
+        {{repo.name}}:
+        {{#success build.status}}
+        test #{{build.number}} succeeded!
+        {{else}}
+        test #{{build.number}} failed!
+        {{/success}}
+      webhook:
+        from_secret: SLACK_WEBHOOK_URL
+    when:
+      status: [ success, failure ]
+
+---
+kind: pipeline
+type: docker
+name: deploy
+
+trigger:
+  event:
+    - push
+  branch:
+    - master
+
+steps:
   - name: deploy prod
     image: docker/compose:1.25.5
     when:
@@ -44,8 +90,7 @@ steps:
         path: /var/run/docker.sock
     commands:
       - /bin/sh /drone/src/.docker/scripts/deploy_prod.sh
-
-  - name: slack after
+  - name: slack after deploy
     image: plugins/slack
     failure: ignore
     settings:
@@ -66,9 +111,3 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
-
-trigger:
-  event:
-    - push
-  branch:
-    - master
