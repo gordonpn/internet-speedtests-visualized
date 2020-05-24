@@ -29,12 +29,19 @@ trigger:
   event: [ push ]
 
 steps:
-  - name: test security for scraper
+  - name: bandit test for scraper
     image: python:3.8-buster
     commands:
       - cd ./scraper
       - pip install bandit
       - bandit -r ./
+  - name: safety check for scraper
+    image: python:3.8-buster
+    commands:
+      - cd ./scraper
+      - pip install safety
+      - safety check
+      - safety check -r requirements.txt
   - name: slack after test
     image: plugins/slack
     failure: ignore
