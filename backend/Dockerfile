@@ -7,6 +7,5 @@ USER node
 RUN npm ci --only=production
 RUN npm cache clean --force --loglevel=error
 COPY --chown=node:node . .
-HEALTHCHECK --timeout=3s --start-period=10s CMD node healthcheck.js
 EXPOSE 3080
 CMD [ "node", "server.js" ]

@@ -22,13 +22,25 @@ services:
       - NODE_ENV=production
     expose:
       - 3000
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   speedtest-client:
     container_name: speedtest-client
     expose:
       - "80"
+    labels:
+      - "traefik.enable=true"
     healthcheck:
       test: curl --fail -s http://localhost:80/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 volumes:
   mongodb-speedtest:
