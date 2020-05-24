@@ -1,5 +1,6 @@
 const express = require("express");
-const cors = require("cors");
+const compression = require("compression");
+const helmet = require("helmet");
 const pino = require("pino");
 const expressPino = require("express-pino-logger");
 const { connectDb } = require("./models/index");
@@ -12,23 +13,13 @@ const logger = pino({
   level: process.env.LOG_LEVEL || "info",
 });
 
-const whitelist = ["http://localhost:4000", "https://speed.gordon-pn.com"];
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
-
 const expressLogger = expressPino({ logger });
 const app = express();
 app.use(express.json());
 app.use(expressLogger);
 app.use("/api/v1", routes);
-app.use(cors(corsOptions));
+app.use(compression());
+app.use(helmet());
 
 const host = "0.0.0.0";
 const port = process.env.PORT || 3000;

@@ -18,6 +18,8 @@ services:
 
   speedtest-server:
     container_name: speedtest-server
+    environment:
+      - NODE_ENV=production
     expose:
       - 3000
 
