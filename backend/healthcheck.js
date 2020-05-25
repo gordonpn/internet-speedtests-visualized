@@ -18,9 +18,9 @@ const options = {
 const request = http.request(options, (result) => {
   logger.info(`Performed health check, result ${result.statusCode}`);
   if (result.statusCode < 400) {
-    process.exit(0);
+    process.exitCode = 0;
   } else {
-    process.exit(1);
+    process.exitCode = 1;
   }
 });
 
@@ -28,7 +28,7 @@ request.on("error", (err) => {
   logger.error(
     `An error occurred while performing health check, error: ${err}`
   );
-  process.exit(1);
+  process.exitCode = 1;
 });
 
 request.end();

@@ -1,6 +1,7 @@
 const express = require("express");
 const compression = require("compression");
 const helmet = require("helmet");
+const noCache = require("nocache");
 const pino = require("pino");
 const expressPino = require("express-pino-logger");
 const { connectDb } = require("./models/index");
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(expressLogger);
 app.use("/api/v1", routes);
 app.use(compression());
+app.use(noCache());
 app.use(helmet());
 
 const host = "0.0.0.0";

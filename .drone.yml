@@ -104,9 +104,9 @@ steps:
       template: >
         {{repo.name}}:
         {{#success build.status}}
-        test #{{build.number}} succeeded!
+        security scan #{{build.number}} succeeded!
         {{else}}
-        test #{{build.number}} failed!
+        security scan #{{build.number}} failed!
         {{/success}}
       webhook:
         from_secret: SLACK_WEBHOOK_URL
@@ -159,9 +159,9 @@ steps:
       template: >
         {{repo.name}}:
         {{#success build.status}}
-        build #{{build.number}} succeeded!
+        deploy #{{build.number}} succeeded!
         {{else}}
-        build #{{build.number}} failed!
+        deploy #{{build.number}} failed!
         {{/success}}
       webhook:
         from_secret: SLACK_WEBHOOK_URL
