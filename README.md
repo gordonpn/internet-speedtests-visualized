@@ -32,6 +32,10 @@ The project is split into five Docker containers:
 - Redis cache server
 - NGINX
 
+## Screenshot
+
+![Screenshots](./docs/screenshot.png)
+
 ## Getting started
 
 ### Prerequisites

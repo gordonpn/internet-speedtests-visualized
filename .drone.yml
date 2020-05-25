@@ -103,6 +103,7 @@ steps:
         from_secret: SNYK_TOKEN
     commands:
       - cd ./frontend
+      - npm install -g snyk
       - snyk test --severity-threshold=high
   - name: backend snyk scan
     image: node:14-buster-slim
@@ -111,6 +112,7 @@ steps:
         from_secret: SNYK_TOKEN
     commands:
       - cd ./backend
+      - npm install -g snyk
       - snyk test --severity-threshold=high
   - name: slack after security
     image: plugins/slack
