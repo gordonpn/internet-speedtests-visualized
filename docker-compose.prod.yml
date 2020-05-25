@@ -7,11 +7,58 @@ services:
       - mongodb-speedtest:/data/db
     expose:
       - 27017
+    networks:
+      - speedtest-network
+
+  speedtest-redis:
+    container_name: speedtest-redis
+    expose:
+      - 6379
+    networks:
+      - speedtest-network
 
   speedtest-scraper:
-      container_name: speedtest-scraper
+    container_name: speedtest-scraper
+    networks:
+      - speedtest-network
+
+  speedtest-server:
+    container_name: speedtest-server
+    environment:
+      - NODE_ENV=production
+    networks:
+      - speedtest-network
+    expose:
+      - 3000
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  speedtest-client:
+    container_name: speedtest-client
+    networks:
+      - speedtest-network
+      - web
+    expose:
+      - "80"
+    labels:
+      - "traefik.enable=true"
+    healthcheck:
+      test: curl --fail -s http://localhost:80/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 volumes:
   mongodb-speedtest:
     external:
       name: mongodb-speedtest
+
+networks:
+  speedtest-network:
+  web:
+    external: true

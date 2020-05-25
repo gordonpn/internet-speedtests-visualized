@@ -1,35 +1,37 @@
 .App {
-    text-align: center;
+  text-align: center;
 }
 
 body {
-    background: rgb(254, 211, 159);
-    background: linear-gradient(162deg, rgba(254, 211, 159, 1) 0%, rgba(246, 238, 201, 1) 67%);
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    height: 100%;
-    margin: 0;
-    width: 100%;
+  background: rgb(254, 211, 159);
+  background: linear-gradient(
+    162deg,
+    rgba(254, 211, 159, 1) 0%,
+    rgba(246, 238, 201, 1) 67%
+  );
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  height: 100%;
+  margin: 0;
+  width: 100%;
 }
 
 #content-desktop {
-    display: block;
+  display: block;
 }
 
 #content-mobile {
-    display: none;
+  display: none;
 }
 
 @media (orientation: portrait) {
+  #content-desktop {
+    display: none;
+  }
 
-    #content-desktop {
-        display: none;
-    }
-
-    #content-mobile {
-        display: block;
-    }
-
+  #content-mobile {
+    display: block;
+  }
 }

@@ -1,12 +1,14 @@
 ---
 kind: pipeline
 type: docker
-name: deploy
+name: notification
+
+trigger:
+  event: [ push ]
 
 steps:
   - name: slack before
     image: plugins/slack
-    failure: ignore
     settings:
       channel: drone-ci
       template: >
@@ -18,6 +20,129 @@ steps:
       webhook:
         from_secret: SLACK_WEBHOOK_URL
 
+---
+kind: pipeline
+type: docker
+name: build docker images
+
+trigger:
+  event: [ push ]
+
+steps:
+  - name: build scraper image
+    image: docker
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - cd ./scraper
+      - docker image build .
+  - name: build backend image
+    image: docker
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - cd ./backend
+      - docker image build .
+  - name: build frontend image
+    image: docker
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - cd ./frontend
+      - docker image build .
+  - name: slack after docker image build
+    image: plugins/slack
+    settings:
+      channel: drone-ci
+      template: >
+        {{repo.name}}:
+        {{#success build.status}}
+        docker image build #{{build.number}} succeeded!
+        {{else}}
+        docker image build #{{build.number}} failed!
+        {{/success}}
+      webhook:
+        from_secret: SLACK_WEBHOOK_URL
+    when:
+      status: [ success, failure ]
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+
+---
+kind: pipeline
+type: docker
+name: security
+
+trigger:
+  event: [ push ]
+
+steps:
+  - name: bandit test for scraper
+    image: python:3.8-buster
+    commands:
+      - cd ./scraper
+      - pip install bandit
+      - bandit -r ./
+  - name: safety check for scraper
+    image: python:3.8-buster
+    commands:
+      - cd ./scraper
+      - pip install safety
+      - safety check
+      - safety check -r requirements.txt
+  - name: frontend snyk scan
+    image: node:14-buster-slim
+    environment:
+      SNYK_TOKEN:
+        from_secret: SNYK_TOKEN
+    commands:
+      - cd ./frontend
+      - npm install -g snyk
+      - snyk test --severity-threshold=high
+  - name: backend snyk scan
+    image: node:14-buster-slim
+    environment:
+      SNYK_TOKEN:
+        from_secret: SNYK_TOKEN
+    commands:
+      - cd ./backend
+      - npm install -g snyk
+      - snyk test --severity-threshold=high
+  - name: slack after security
+    image: plugins/slack
+    failure: ignore
+    settings:
+      channel: drone-ci
+      template: >
+        {{repo.name}}:
+        {{#success build.status}}
+        security scan #{{build.number}} succeeded!
+        {{else}}
+        security scan #{{build.number}} failed!
+        {{/success}}
+      webhook:
+        from_secret: SLACK_WEBHOOK_URL
+    when:
+      status: [ success, failure ]
+
+---
+kind: pipeline
+type: docker
+name: deploy
+
+trigger:
+  event:
+    - push
+  branch:
+    - master
+
+steps:
   - name: deploy prod
     image: docker/compose:1.25.5
     when:
@@ -44,8 +169,7 @@ steps:
         path: /var/run/docker.sock
     commands:
       - /bin/sh /drone/src/.docker/scripts/deploy_prod.sh
-
-  - name: slack after
+  - name: slack after deploy
     image: plugins/slack
     failure: ignore
     settings:
@@ -53,9 +177,9 @@ steps:
       template: >
         {{repo.name}}:
         {{#success build.status}}
-        build #{{build.number}} succeeded!
+        deploy #{{build.number}} succeeded!
         {{else}}
-        build #{{build.number}} failed!
+        deploy #{{build.number}} failed!
         {{/success}}
       webhook:
         from_secret: SLACK_WEBHOOK_URL
@@ -66,9 +190,3 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
-
-trigger:
-  event:
-    - push
-  branch:
-    - master
