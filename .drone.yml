@@ -96,6 +96,22 @@ steps:
       - pip install safety
       - safety check
       - safety check -r requirements.txt
+  - name: frontend snyk scan
+    image: node:14-buster-slim
+    environment:
+      SNYK_TOKEN:
+        from_secret: SNYK_TOKEN
+    commands:
+      - cd ./frontend
+      - snyk test --severity-threshold=high
+  - name: backend snyk scan
+    image: node:14-buster-slim
+    environment:
+      SNYK_TOKEN:
+        from_secret: SNYK_TOKEN
+    commands:
+      - cd ./backend
+      - snyk test --severity-threshold=high
   - name: slack after test
     image: plugins/slack
     failure: ignore
