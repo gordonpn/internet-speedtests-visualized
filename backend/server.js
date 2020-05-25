@@ -1,5 +1,4 @@
 const express = require("express");
-const compression = require("compression");
 const helmet = require("helmet");
 const noCache = require("nocache");
 const pino = require("pino");
@@ -19,7 +18,6 @@ const app = express();
 app.use(express.json());
 app.use(expressLogger);
 app.use("/api/v1", routes);
-app.use(compression());
 app.use(noCache());
 app.use(helmet());
 

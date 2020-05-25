@@ -112,7 +112,7 @@ steps:
     commands:
       - cd ./backend
       - snyk test --severity-threshold=high
-  - name: slack after test
+  - name: slack after security
     image: plugins/slack
     failure: ignore
     settings:
