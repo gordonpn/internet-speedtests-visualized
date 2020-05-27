@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const redis = require("redis");
-const util = require("util");
+const { promisify } = require("util");
 const pino = require("pino");
 require("dotenv").config();
 
@@ -15,9 +15,26 @@ logger.info(`Connecting to Redis on host ${host}`);
 const client = redis.createClient({ host, port: 6379 });
 client.on("ready", () => logger.info("Connected to Redis"));
 client.on("error", (err) => logger.error(err));
-client.hget = util.promisify(client.hget);
+client.hgetall = promisify(client.hgetall);
+client.get = promisify(client.get);
 
 const { exec } = mongoose.Query.prototype;
+
+const checkCache = async (key) => {
+  const cacheValue = await client.hgetall(key);
+  if (!cacheValue) {
+    logger.info("Data not found cached in Redis");
+    return null;
+  }
+  logger.info("Found data in cached in Redis");
+  return cacheValue;
+};
+
+const setCache = (key, value) => {
+  logger.info(`Setting new cache for key: ${key}`);
+  client.hmset(key, value);
+  client.expire(key, 3600);
+};
 
 mongoose.Query.prototype.cache = function (options = { expire: 3600 }) {
   this.useCache = true;
@@ -32,6 +49,7 @@ mongoose.Query.prototype.exec = async function () {
     return exec.apply(this, arguments);
   }
   const key = JSON.stringify({
+    ...this.getQuery(),
     collection: this.mongooseCollection.name,
   });
 
@@ -57,4 +75,6 @@ module.exports = {
   clearHash(hashKey) {
     client.del(JSON.stringify(hashKey));
   },
+  checkCache,
+  setCache,
 };
