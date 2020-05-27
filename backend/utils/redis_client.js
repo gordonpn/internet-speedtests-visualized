@@ -16,7 +16,7 @@ const client = redis.createClient({ host, port: 6379 });
 client.on("ready", () => logger.info("Connected to Redis"));
 client.on("error", (err) => logger.error(err));
 client.hgetall = promisify(client.hgetall);
-client.get = promisify(client.get);
+client.hget = promisify(client.hget);
 
 const { exec } = mongoose.Query.prototype;
 
