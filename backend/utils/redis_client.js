@@ -44,9 +44,9 @@ mongoose.Query.prototype.cache = function (options = { expire: 3600 }) {
   return this;
 };
 
-mongoose.Query.prototype.exec = async function () {
+mongoose.Query.prototype.exec = async function (...args) {
   if (!this.useCache) {
-    return exec.apply(this, arguments);
+    return exec.apply(this, args);
   }
   const key = JSON.stringify({
     ...this.getQuery(),
@@ -56,7 +56,7 @@ mongoose.Query.prototype.exec = async function () {
   const cacheValue = await client.hget(this.hashKey, key);
 
   if (!cacheValue) {
-    const result = await exec.apply(this, arguments);
+    const result = await exec.apply(this, args);
     client.hset(this.hashKey, key, JSON.stringify(result));
     client.expire(this.hashKey, this.expire);
 
@@ -72,9 +72,6 @@ mongoose.Query.prototype.exec = async function () {
 };
 
 module.exports = {
-  clearHash(hashKey) {
-    client.del(JSON.stringify(hashKey));
-  },
   checkCache,
   setCache,
 };
