@@ -3,6 +3,7 @@ import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Content from "./components/Content";
 import "./App.css";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           </Card.Body>
         </Card>
       </Container>
+      <Footer />
     </div>
   );
 }

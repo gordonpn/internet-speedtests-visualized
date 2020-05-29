@@ -67,6 +67,9 @@ name: security
 
 trigger:
   event: [ push ]
+  branch:
+    exclude:
+      - master
 
 steps:
   - name: bandit test for scraper

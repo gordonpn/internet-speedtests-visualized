@@ -16,6 +16,7 @@ The project is split into five Docker containers:
 
 ---
 [![Build Status](https://drone.gordon-pn.com/api/badges/gordonpn/internet-speedtests-visualized/status.svg)](https://drone.gordon-pn.com/gordonpn/internet-speedtests-visualized)
+[![Uptime Robot](https://badgen.net/uptime-robot/status/m785044850-35e77143f95077b8ad295803)](https://speed.gordon-pn.com)
 ![Healthchecks.io](https://healthchecks.io/badge/b37af876-e3fd-4dbd-9f62-b59fbd16fcf1/uryOUBpi.svg)
 ![Last commit on develop](https://badgen.net/github/last-commit/gordonpn/internet-speedtests-visualized/develop)
 ![License](https://badgen.net/github/license/gordonpn/internet-speedtests-visualized)
