@@ -45,16 +45,42 @@ volumes:
     host:
       path: /var/run/docker.sock
 
-# ---
-# kind : pipeline
-# type: docker
-# name: publish docker images
+---
+kind : pipeline
+type: docker
+name: publish docker images
 
-# trigger:
-#   event: [ push, pull_request ]
-#   branch:
-#     exclude:
-#       - master
+trigger:
+  event: [ push, pull_request ]
+  branch:
+    exclude:
+      - master
+
+steps:
+  - name: publish
+    image: docker
+    environment:
+      DOCKER_TOKEN:
+        from_secret: DOCKER_TOKEN
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - echo $DOCKER_TOKEN | docker login -u gordonpn --password-stdin
+      - cd /drone/src/frontend
+      - docker build -t gordonpn/speedtest-frontend:latest .
+      - docker push gordonpn/speedtest-frontend:latest
+      - cd /drone/src/backend
+      - docker build -t gordonpn/speedtest-backend:latest .
+      - docker push gordonpn/speedtest-backend:latest
+      - cd /drone/src/scraper
+      - docker build -t gordonpn/speedtest-scraper:latest .
+      - docker push gordonpn/speedtest-scraper:latest
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
 ---
 kind: pipeline
 type: docker
@@ -80,33 +106,17 @@ steps:
       - pip install safety
       - safety check
       - safety check -r requirements.txt
-  - name: frontend snyk scan
-    image: snyk/snyk-cli:npm
+  - name: snyk scan
+    image: node:14-buster-slim
     environment:
-      PROJECT_FOLDER: frontend
       SNYK_TOKEN:
         from_secret: SNYK_TOKEN
     commands:
-      - ln -s /drone/src /project
-      - test --severity-threshold=high
-  # - name: frontend snyk scan
-  #   image: node:14-buster-slim
-  #   environment:
-  #     SNYK_TOKEN:
-  #       from_secret: SNYK_TOKEN
-  #   commands:
-  #     - cd ./frontend
-  #     - npm install -g snyk
-  #     - snyk test --severity-threshold=high
-  # - name: backend snyk scan
-  #   image: node:14-buster-slim
-  #   environment:
-  #     SNYK_TOKEN:
-  #       from_secret: SNYK_TOKEN
-  #   commands:
-  #     - cd ./backend
-  #     - npm install -g snyk
-  #     - snyk test --severity-threshold=high
+      - cd /drone/src/frontend
+      - npm install -g snyk
+      - snyk test --severity-threshold=high
+      - cd /drone/src/backend
+      - snyk test --severity-threshold=high
 
 ---
 kind: pipeline
@@ -177,5 +187,6 @@ steps:
 
 depends_on:
   - build docker images
+  - publish docker images
   - security
   - deploy
