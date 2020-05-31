@@ -14,7 +14,7 @@ steps:
       template: >
         {{build.event}} on branch {{build.branch}} from repo {{repo.name}}
 
-        build #{{build.number}} started!
+        build #{{build.number}} started
 
         {{build.link}}
       webhook:
@@ -39,27 +39,22 @@ steps:
         path: /var/run/docker.sock
     commands:
       - docker-compose -f /drone/src/docker-compose.yml -f /drone/src/docker-compose.prod.yml build
-  - name: slack after docker image build
-    image: plugins/slack
-    settings:
-      channel: drone-ci
-      template: >
-        {{repo.name}}:
-        {{#success build.status}}
-        docker image build #{{build.number}} succeeded!
-        {{else}}
-        docker image build #{{build.number}} failed!
-        {{/success}}
-      webhook:
-        from_secret: SLACK_WEBHOOK_URL
-    when:
-      status: [ success, failure ]
 
 volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
 
+# ---
+# kind : pipeline
+# type: docker
+# name: publish docker images
+
+# trigger:
+#   event: [ push, pull_request ]
+#   branch:
+#     exclude:
+#       - master
 ---
 kind: pipeline
 type: docker
@@ -86,39 +81,32 @@ steps:
       - safety check
       - safety check -r requirements.txt
   - name: frontend snyk scan
-    image: node:14-buster-slim
+    image: snyk/snyk-cli:npm
     environment:
+      PROJECT_FOLDER: frontend
       SNYK_TOKEN:
         from_secret: SNYK_TOKEN
     commands:
-      - cd ./frontend
-      - npm install -g snyk
-      - snyk test --severity-threshold=high
-  - name: backend snyk scan
-    image: node:14-buster-slim
-    environment:
-      SNYK_TOKEN:
-        from_secret: SNYK_TOKEN
-    commands:
-      - cd ./backend
-      - npm install -g snyk
-      - snyk test --severity-threshold=high
-  - name: slack after security
-    image: plugins/slack
-    failure: ignore
-    settings:
-      channel: drone-ci
-      template: >
-        {{repo.name}}:
-        {{#success build.status}}
-        security scan #{{build.number}} succeeded!
-        {{else}}
-        security scan #{{build.number}} failed!
-        {{/success}}
-      webhook:
-        from_secret: SLACK_WEBHOOK_URL
-    when:
-      status: [ success, failure ]
+      - ln -s /drone/src /project
+      - test --severity-threshold=high
+  # - name: frontend snyk scan
+  #   image: node:14-buster-slim
+  #   environment:
+  #     SNYK_TOKEN:
+  #       from_secret: SNYK_TOKEN
+  #   commands:
+  #     - cd ./frontend
+  #     - npm install -g snyk
+  #     - snyk test --severity-threshold=high
+  # - name: backend snyk scan
+  #   image: node:14-buster-slim
+  #   environment:
+  #     SNYK_TOKEN:
+  #       from_secret: SNYK_TOKEN
+  #   commands:
+  #     - cd ./backend
+  #     - npm install -g snyk
+  #     - snyk test --severity-threshold=high
 
 ---
 kind: pipeline
@@ -155,7 +143,22 @@ steps:
         path: /var/run/docker.sock
     commands:
       - /bin/sh /drone/src/.docker/scripts/deploy_prod.sh
-  - name: slack after deploy
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+
+---
+kind: pipeline
+type: docker
+name: notification after
+
+trigger:
+  event: [ push, pull_request ]
+
+steps:
+  - name: slack after
     image: plugins/slack
     failure: ignore
     settings:
@@ -163,16 +166,16 @@ steps:
       template: >
         {{repo.name}}:
         {{#success build.status}}
-        deploy #{{build.number}} succeeded!
+        build #{{build.number}} succeeded
         {{else}}
-        deploy #{{build.number}} failed!
+        build #{{build.number}} failed
         {{/success}}
       webhook:
         from_secret: SLACK_WEBHOOK_URL
     when:
       status: [ success, failure ]
 
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/docker.sock
+depends_on:
+  - build docker images
+  - security
+  - deploy
