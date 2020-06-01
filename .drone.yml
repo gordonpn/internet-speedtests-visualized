@@ -25,6 +25,10 @@ kind : pipeline
 type: docker
 name: build and publish docker image
 
+platform:
+  os: linux
+  arch: amd64
+
 trigger:
   event: [ push, pull_request ]
   branch:
@@ -33,7 +37,7 @@ trigger:
 
 steps:
   - name: publish
-    image: docker
+    image: gordonpn/docker-buildx-drone
     environment:
       DOCKER_TOKEN:
         from_secret: DOCKER_TOKEN
@@ -42,12 +46,14 @@ steps:
         path: /var/run/docker.sock
     commands:
       - echo $DOCKER_TOKEN | docker login -u gordonpn --password-stdin
+      - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - docker buildx rm builder || true
+      - docker buildx create --name builder --driver docker-container --use
+      - docker buildx inspect --bootstrap
       - cd /drone/src/frontend
-      - docker build -t gordonpn/speedtest-frontend:latest .
-      - docker push gordonpn/speedtest-frontend:latest
+      - docker buildx build -t gordonpn/speedtest-frontend:latest --platform linux/amd64,linux/arm64 --push .
       - cd /drone/src/backend
-      - docker build -t gordonpn/speedtest-backend:latest .
-      - docker push gordonpn/speedtest-backend:latest
+      - docker buildx build -t gordonpn/speedtest-backend:latest --platform linux/amd64,linux/arm64 --push .
       - cd /drone/src/scraper
       - docker build -t gordonpn/speedtest-scraper:latest .
       - docker push gordonpn/speedtest-scraper:latest
