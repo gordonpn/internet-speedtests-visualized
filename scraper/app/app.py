@@ -63,7 +63,7 @@ class SpeedtestScraper:
 
     def connect_to_db(self) -> Collection:
         logger.debug("Making connection to mongodb")
-        host = "speedtest-mongodb"
+        host = "mongodb"
         uri: str = f"mongodb://{self.db_username}:{self.db_password}@{host}:27017/{self.db_name}"
         connection: MongoClient = MongoClient(uri)
         db: Database = connection[self.db_name]

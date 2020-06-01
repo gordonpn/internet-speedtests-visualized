@@ -1,31 +1,31 @@
 version: "3.8"
 services:
 
-  speedtest-mongodb:
+  mongodb:
     container_name: speedtest-mongodb-dev
     volumes:
       - dev-mongodb-speedtest:/data/db
     ports:
       - "127.0.0.1:27017:27017"
 
-  speedtest-redis:
+  redis:
     container_name: speedtest-redis-dev
     ports:
       - "127.0.0.1:6379:6379"
 
-  speedtest-scraper:
+  scraper:
     container_name: speedtest-scraper-dev
     environment:
       - DEV_RUN=true
 
-  speedtest-server:
+  server:
     container_name: speedtest-server-dev
     environment:
       - LOG_LEVEL=debug
     ports:
       - "127.0.0.1:3000:3000"
 
-  speedtest-client:
+  client:
     container_name: speedtest-client-dev
     ports:
       - "127.0.0.1:4000:80"

@@ -8,7 +8,7 @@ const logger = pino({
   level: process.env.LOG_LEVEL || "info",
 });
 
-const host = process.env.REDIS_HOST || "speedtest-redis";
+const host = process.env.REDIS_HOST || "redis";
 
 logger.info(`Connecting to Redis on host ${host}`);
 

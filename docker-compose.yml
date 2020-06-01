@@ -1,7 +1,7 @@
 version: "3.8"
 services:
 
-  speedtest-mongodb:
+  mongodb:
     image: mongo:latest
     environment:
       - MONGO_INITDB_DATABASE
@@ -15,11 +15,11 @@ services:
       - ./.docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     restart: unless-stopped
 
-  speedtest-redis:
+  redis:
     image: redis:latest
     restart: unless-stopped
 
-  speedtest-scraper:
+  scraper:
     build:
       context: ./scraper
       dockerfile: Dockerfile
@@ -32,9 +32,9 @@ services:
       - TZ=America/Montreal
     restart: unless-stopped
     depends_on:
-      - speedtest-mongodb
+      - mongodb
 
-  speedtest-server:
+  server:
     init: true
     build:
       context: ./backend
@@ -47,10 +47,10 @@ services:
       - TZ=America/Montreal
     restart: unless-stopped
     depends_on:
-      - speedtest-mongodb
-      - speedtest-redis
+      - mongodb
+      - redis
 
-  speedtest-client:
+  client:
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -58,7 +58,7 @@ services:
       - TZ=America/Montreal
     restart: unless-stopped
     depends_on:
-      - speedtest-mongodb
-      - speedtest-redis
-      - speedtest-server
+      - mongodb
+      - redis
+      - server
 

@@ -10,7 +10,7 @@ const logger = pino({
 const dbName = process.env.MONGO_INITDB_DATABASE;
 const dbUsername = process.env.MONGO_NON_ROOT_USERNAME;
 const dbPassword = process.env.MONGO_NON_ROOT_PASSWORD;
-const host = process.env.MONGO_HOST || "speedtest-mongodb";
+const host = process.env.MONGO_HOST || "mongodb";
 const uri = `mongodb://${dbUsername}:${dbPassword}@${host}:27017/${dbName}`;
 
 logger.info(`Connecting to MongoDB on host ${host}`);
