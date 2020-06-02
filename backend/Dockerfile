@@ -1,4 +1,5 @@
 FROM node:14.2-alpine
+RUN apk --no-cache add curl
 RUN mkdir -p /usr/src/app && chown -R node:node /usr/src/app
 WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH

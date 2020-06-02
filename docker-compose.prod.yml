@@ -87,7 +87,7 @@ services:
     expose:
       - 3000
     healthcheck:
-      test: ["CMD", "node", "healthcheck.js"]
+      test: curl --fail -s http://localhost:3000/api/v1/healthcheck/ || exit 1
       interval: 1m30s
       timeout: 10s
       retries: 3
