@@ -8,5 +8,5 @@ USER node
 RUN npm ci --only=production
 RUN npm cache clean --force --loglevel=error
 COPY --chown=node:node . .
-EXPOSE 3080
+EXPOSE 3000
 CMD [ "node", "server.js" ]
