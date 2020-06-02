@@ -34,7 +34,7 @@ services:
     depends_on:
       - mongodb
 
-  server:
+  backend:
     init: true
     build:
       context: ./backend
@@ -50,7 +50,7 @@ services:
       - mongodb
       - redis
 
-  client:
+  frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -60,5 +60,5 @@ services:
     depends_on:
       - mongodb
       - redis
-      - server
+      - backend
 

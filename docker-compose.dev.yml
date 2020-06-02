@@ -18,14 +18,14 @@ services:
     environment:
       - DEV_RUN=true
 
-  server:
+  backend:
     container_name: speedtest-server-dev
     environment:
       - LOG_LEVEL=debug
     ports:
       - "127.0.0.1:3000:3000"
 
-  client:
+  frontend:
     container_name: speedtest-client-dev
     ports:
       - "127.0.0.1:4000:80"
