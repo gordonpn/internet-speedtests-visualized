@@ -55,6 +55,7 @@ services:
 
   scraper:
     container_name: speedtest-scraper
+    image: gordonpn/speedtest-scraper:latest
     networks:
       - speedtest-network
     deploy:
@@ -78,6 +79,7 @@ services:
 
   server:
     container_name: speedtest-server
+    image: gordonpn/speedtest-backend:latest
     environment:
       - NODE_ENV=production
     networks:
@@ -108,6 +110,7 @@ services:
 
   client:
     container_name: speedtest-client
+    image: gordonpn/speedtest-frontend:latest
     networks:
       - speedtest-network
       - traefik-public
