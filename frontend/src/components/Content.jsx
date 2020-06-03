@@ -5,8 +5,8 @@ export default function Content() {
   return (
     <>
       <Charts type="hours" />
-      <Charts type="days" />
       <Charts type="weekdays" />
+      <Charts type="days" />
       <Charts type="weeks" />
       <Charts type="months" />
     </>

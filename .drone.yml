@@ -21,7 +21,7 @@ steps:
         from_secret: SLACK_WEBHOOK_URL
 
 ---
-kind : pipeline
+kind: pipeline
 type: docker
 name: build and publish docker image
 
@@ -45,18 +45,7 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - echo $DOCKER_TOKEN | docker login -u gordonpn --password-stdin
-      - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-      - docker buildx rm builder || true
-      - docker buildx create --name builder --driver docker-container --use
-      - docker buildx inspect --bootstrap
-      - cd /drone/src/frontend
-      - docker buildx build -t gordonpn/speedtest-frontend:latest --platform linux/amd64,linux/arm64 --push .
-      - cd /drone/src/backend
-      - docker buildx build -t gordonpn/speedtest-backend:latest --platform linux/amd64,linux/arm64 --push .
-      - cd /drone/src/scraper
-      - docker build -t gordonpn/speedtest-scraper:latest .
-      - docker push gordonpn/speedtest-scraper:latest
+      - /drone/src/.docker/scripts/build.sh
 
 volumes:
   - name: dockersock
@@ -70,8 +59,10 @@ name: security
 trigger:
   event: [ push, pull_request ]
   branch:
-    exclude:
-      - master
+    - develop
+
+depends_on:
+  - build and publish docker image
 
 steps:
   - name: bandit test for scraper
@@ -92,12 +83,22 @@ steps:
     environment:
       SNYK_TOKEN:
         from_secret: SNYK_TOKEN
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
     commands:
       - cd /drone/src/frontend
       - snyk test --severity-threshold=high
       - cd /drone/src/backend
       - snyk test --severity-threshold=high
+      - snyk test --docker gordonpn/speedtest-frontend:latest --file=Dockerfile --exclude-base-image-vulns
+      - snyk test --docker gordonpn/speedtest-backend:latest --file=Dockerfile --exclude-base-image-vulns
+      - snyk test --docker gordonpn/speedtest-scraper:latest --file=Dockerfile --exclude-base-image-vulns
 
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
 ---
 kind: pipeline
 type: docker
@@ -131,7 +132,7 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - /bin/sh /drone/src/.docker/scripts/deploy.sh
+      - /drone/src/.docker/scripts/deploy.sh
 
 volumes:
   - name: dockersock

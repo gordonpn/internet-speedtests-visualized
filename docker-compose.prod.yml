@@ -73,9 +73,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-      placement:
-        constraints:
-          - node.labels.main-node == true
 
   backend:
     container_name: speedtest-server
@@ -93,7 +90,7 @@ services:
       retries: 3
       start_period: 1m30s
     deploy:
-      replicas: 2
+      replicas: 3
       update_config:
         parallelism: 1
         order: start-first
@@ -107,9 +104,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-      placement:
-        constraints:
-          - node.labels.main-node == true
 
   frontend:
     container_name: speedtest-client
@@ -128,7 +122,7 @@ services:
       retries: 3
       start_period: 1m30s
     deploy:
-      replicas: 2
+      replicas: 3
       update_config:
         parallelism: 1
         order: start-first
@@ -142,9 +136,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-      placement:
-        constraints:
-          - node.labels.main-node == true
       labels:
         - "traefik.enable=true"
         - "traefik.constraint-label=traefik-public"

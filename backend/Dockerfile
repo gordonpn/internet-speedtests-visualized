@@ -1,4 +1,4 @@
-FROM node:14.2-alpine
+FROM node:14-alpine
 RUN apk --no-cache add curl
 RUN mkdir -p /usr/src/app && chown -R node:node /usr/src/app
 WORKDIR /usr/src/app
