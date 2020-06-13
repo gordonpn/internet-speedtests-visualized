@@ -4,6 +4,7 @@ import Axios from "axios";
 import Chart from "react-apexcharts";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Skeleton from "react-loading-skeleton";
 
 const getSubtitle = (type) => {
   switch (type) {
@@ -112,7 +113,7 @@ export default function Charts(props) {
       </>
     );
   }
-  return <></>;
+  return <Skeleton height={300} />;
 }
 
 Charts.propTypes = {
