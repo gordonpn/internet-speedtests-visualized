@@ -29,6 +29,16 @@ export default function Footer() {
           Website
         </a>
       </p>
+      <p>
+        {"If you enjoy what I'm making, you can "}
+        <a
+          href="https://www.buymeacoffee.com/gordonpn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          buy me a coffee!
+        </a>
+      </p>
     </>
   );
 }
