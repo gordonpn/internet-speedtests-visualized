@@ -23,7 +23,7 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: build and publish docker image
+name: build and publish
 
 platform:
   os: linux
@@ -62,24 +62,41 @@ trigger:
     - develop
 
 depends_on:
-  - build and publish docker image
+  - build and publish
 
 steps:
   - name: bandit test for scraper
     image: python:3.8-buster
+    failure: ignore
     commands:
       - cd ./scraper
       - pip install bandit
       - bandit -r ./
   - name: safety check for scraper
     image: python:3.8-buster
+    failure: ignore
     commands:
       - cd ./scraper
       - pip install safety
       - safety check
       - safety check -r requirements.txt
+  - name: trivy scan
+    image: docker
+    failure: ignore
+    environment:
+      GITHUB_TOKEN:
+        from_secret: GITHUB_TOKEN
+    commands:
+      - docker run aquasec/trivy --ignore-unfixed --no-progress --exit-code 1 --severity CRITICAL repo https://github.com/gordonpn/internet-speedtests-visualized
+      - docker run aquasec/trivy --ignore-unfixed --no-progress --exit-code 1 --severity CRITICAL gordonpn/speedtest-scraper
+      - docker run aquasec/trivy --ignore-unfixed --no-progress --exit-code 1 --severity CRITICAL gordonpn/speedtest-backend
+      - docker run aquasec/trivy --ignore-unfixed --no-progress --exit-code 1 --severity CRITICAL gordonpn/speedtest-frontend
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
   - name: snyk scan
     image: gordonpn/snyk-cli-drone
+    failure: ignore
     environment:
       SNYK_TOKEN:
         from_secret: SNYK_TOKEN
@@ -87,13 +104,10 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - cd /drone/src/frontend
-      - snyk test --severity-threshold=high
-      - cd /drone/src/backend
-      - snyk test --severity-threshold=high
-      - snyk test --docker gordonpn/speedtest-frontend:latest --file=Dockerfile --exclude-base-image-vulns
-      - snyk test --docker gordonpn/speedtest-backend:latest --file=Dockerfile --exclude-base-image-vulns
-      - snyk test --docker gordonpn/speedtest-scraper:latest --file=Dockerfile --exclude-base-image-vulns
+      - snyk test --severity-threshold=high https://github.com/gordonpn/internet-speedtests-visualized
+      # - snyk test --docker gordonpn/speedtest-frontend:latest --file=Dockerfile --exclude-base-image-vulns
+      # - snyk test --docker gordonpn/speedtest-backend:latest --file=Dockerfile --exclude-base-image-vulns
+      # - snyk test --docker gordonpn/speedtest-scraper:latest --file=Dockerfile --exclude-base-image-vulns
 
 volumes:
   - name: dockersock
@@ -166,6 +180,6 @@ steps:
       status: [ success, failure ]
 
 depends_on:
-  - build and publish docker image
+  - build and publish
   - security
   - deploy
