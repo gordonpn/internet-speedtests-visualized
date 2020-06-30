@@ -44,7 +44,7 @@ class SpeedtestScraper:
             HealthCheck.ping_status(Status.SUCCESS)
             logger.debug("Job completed")
         except Exception as e:
-            HealthCheck.ping_status(Status.FAILURE)
+            HealthCheck.ping_status(Status.FAIL)
             logger.error(str(e))
             raise Exception
 
