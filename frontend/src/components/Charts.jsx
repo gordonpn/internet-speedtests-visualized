@@ -87,6 +87,9 @@ export default function Charts(props) {
       const maxValue = Math.max(...values) + 1;
       const minValue = Math.min(...values) - 1;
       const updatedOptions = { ...state };
+      if (type === "days") {
+        updatedOptions.options.xaxis.labels.show = false;
+      }
       updatedOptions.options.xaxis.categories = [...keys];
       updatedOptions.series[0].data = [...values];
       updatedOptions.options.yaxis.max = maxValue;
