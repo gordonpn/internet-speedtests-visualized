@@ -23,7 +23,7 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: build and publish
+name: build and publish latest
 
 platform:
   os: linux
@@ -32,8 +32,7 @@ platform:
 trigger:
   event: [ push, pull_request ]
   branch:
-    exclude:
-      - master
+    exclude: [ master ]
 
 steps:
   - name: publish
@@ -51,6 +50,38 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
+
+---
+kind: pipeline
+type: docker
+name: build and publish stable
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  event: [ push, pull_request ]
+  branch: [ master ]
+
+steps:
+  - name: publish
+    image: gordonpn/docker-buildx-drone
+    environment:
+      DOCKER_TOKEN:
+        from_secret: DOCKER_TOKEN
+      DOCKER_TAG: stable
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - /drone/src/.docker/scripts/build.sh
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+
 ---
 kind: pipeline
 type: docker
@@ -58,11 +89,10 @@ name: security
 
 trigger:
   event: [ push, pull_request ]
-  branch:
-    - develop
+  branch: [ develop ]
 
 depends_on:
-  - build and publish
+  - build and publish latest
 
 steps:
   - name: bandit test for scraper
@@ -105,9 +135,9 @@ steps:
         path: /var/run/docker.sock
     commands:
       - snyk test --severity-threshold=high https://github.com/gordonpn/internet-speedtests-visualized
-      # - snyk test --docker gordonpn/speedtest-frontend:latest --file=Dockerfile --exclude-base-image-vulns
-      # - snyk test --docker gordonpn/speedtest-backend:latest --file=Dockerfile --exclude-base-image-vulns
-      # - snyk test --docker gordonpn/speedtest-scraper:latest --file=Dockerfile --exclude-base-image-vulns
+      - snyk test --docker gordonpn/speedtest-frontend:latest --file=Dockerfile --exclude-base-image-vulns
+      - snyk test --docker gordonpn/speedtest-backend:latest --file=Dockerfile --exclude-base-image-vulns
+      - snyk test --docker gordonpn/speedtest-scraper:latest --file=Dockerfile --exclude-base-image-vulns
 
 volumes:
   - name: dockersock
@@ -119,10 +149,11 @@ type: docker
 name: deploy
 
 trigger:
-  event:
-    - push
-  branch:
-    - master
+  event: [push]
+  branch: [master]
+
+depends_on:
+  - build and publish stable
 
 steps:
   - name: deploy prod
@@ -152,34 +183,3 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
-
----
-kind: pipeline
-type: docker
-name: notification after
-
-trigger:
-  event: [ push, pull_request ]
-
-steps:
-  - name: slack after
-    image: plugins/slack
-    failure: ignore
-    settings:
-      channel: drone-ci
-      template: >
-        {{repo.name}}:
-        {{#success build.status}}
-        build #{{build.number}} succeeded
-        {{else}}
-        build #{{build.number}} failed
-        {{/success}}
-      webhook:
-        from_secret: SLACK_WEBHOOK_URL
-    when:
-      status: [ success, failure ]
-
-depends_on:
-  - build and publish
-  - security
-  - deploy
