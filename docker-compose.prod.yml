@@ -1,6 +1,5 @@
 version: "3.8"
 services:
-
   mongodb:
     container_name: speedtest-mongodb
     volumes:
@@ -52,7 +51,7 @@ services:
 
   scraper:
     container_name: speedtest-scraper
-    image: gordonpn/speedtest-scraper:stable
+    image: ghcr.io/gordonpn/speedtest-scraper:stable
     networks:
       - speedtest-network
     deploy:
@@ -76,7 +75,7 @@ services:
 
   backend:
     container_name: speedtest-server
-    image: gordonpn/speedtest-backend:stable
+    image: ghcr.io/gordonpn/speedtest-backend:stable
     environment:
       - NODE_ENV=production
     networks:
@@ -107,7 +106,7 @@ services:
 
   frontend:
     container_name: speedtest-client
-    image: gordonpn/speedtest-frontend:stable
+    image: ghcr.io/gordonpn/speedtest-frontend:stable
     networks:
       - speedtest-network
       - traefik-public

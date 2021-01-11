@@ -6,6 +6,8 @@ ENV PATH /usr/src/app/node_modules/.bin:$PATH
 COPY --chown=node:node package*.json ./
 USER node
 RUN npm ci --only=production
+RUN npm prune --production
+RUN /usr/local/bin/node-prune
 RUN npm cache clean --force --loglevel=error
 COPY --chown=node:node . .
 EXPOSE 3000
