@@ -9,6 +9,7 @@ import speedtest
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.database import Database
+from speedtest import SpeedtestBestServerFailure
 
 from .healthcheck.healthcheck import HealthCheck, Status
 
@@ -43,6 +44,8 @@ class SpeedtestScraper:
             self.insert_to_db(speed_data)
             HealthCheck.ping_status(Status.SUCCESS)
             logger.debug("Job completed")
+        except SpeedtestBestServerFailure as e:
+            logger.error(str(e))
         except Exception as e:
             HealthCheck.ping_status(Status.FAIL)
             logger.error(str(e))

@@ -365,3 +365,4 @@ hs_err_pid*
 backend/node_modules/
 */.idea*
 
+.vscode/settings.json
