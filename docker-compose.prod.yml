@@ -55,9 +55,9 @@ services:
     networks:
       - speedtest-network
     deploy:
-      placement:
-        constraints:
-          - "node.role==worker"
+      # placement:
+      #   constraints:
+      #     - "node.role==worker"
       replicas: 1
       update_config:
         parallelism: 1
